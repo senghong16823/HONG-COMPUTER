@@ -24,16 +24,49 @@ class CategoryController extends Controller
     // ៣. ទទួលទិន្នន័យពី Form យកមក Save ចូល Database
     public function store(Request $request)
     {
-        // កំណត់លក្ខខណ្ឌថា "ឈ្មោះ" ត្រូវតែវាយបញ្ចូល
         $request->validate([
             'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:50',
+            'description' => 'nullable|string',
         ]);
 
         Category::create([
             'name' => $request->name,
+            'icon' => $request->icon,
             'description' => $request->description,
         ]);
 
         return redirect()->route('categories.index')->with('success', 'ប្រភេទកុំព្យូទ័រត្រូវបានបង្កើតដោយជោគជ័យ!');
+    }
+
+    // ៤. បង្ហាញ Form កែប្រែ (ប្រកាស View ឱ្យត្រូវ Folder admin.categories.edit)
+    public function edit(Category $category)
+    {
+        return view('admin.categories.edit', compact('category'));
+    }
+
+    // ៥. រក្សាទុកការកែប្រែ
+    public function update(Request $request, Category $category)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'icon' => 'nullable|string|max:50',
+            'description' => 'nullable|string',
+        ]);
+
+        $category->update([
+            'name' => $request->name,
+            'icon' => $request->icon,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('categories.index')->with('success', 'កែប្រែប្រភេទទំនិញជោគជ័យ!');
+    }
+
+    // ៦. លុបទិន្នន័យ
+    public function destroy(Category $category)
+    {
+        $category->delete();
+        return redirect()->route('categories.index')->with('success', 'លុបប្រភេទទំនិញជោគជ័យ!');
     }
 }

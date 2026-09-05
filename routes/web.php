@@ -44,4 +44,6 @@ Route::get('/product/{product}', [ShopController::class, 'show'])->name('shop.sh
 
 Route::post('/product/{product}/review', [App\Http\Controllers\ShopController::class, 'storeReview'])->name('reviews.store');
 
+
+Route::resource('categories', \App\Http\Controllers\CategoryController::class);
 require __DIR__.'/auth.php';

@@ -1,0 +1,14 @@
+.git
+.github
+vendor
+node_modules
+.env
+.env.*
+!.env.example
+public/storage
+storage/*.key
+storage/logs/*
+.phpunit.result.cache
+.vscode
+.idea
+npm-debug.log

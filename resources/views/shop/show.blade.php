@@ -13,21 +13,23 @@
 <body class="bg-gray-50 font-sans antialiased">
 
     <!-- Navbar -->
-    <nav class="bg-white shadow-sm border-b border-gray-200 mb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-            <a href="{{ route('shop.index') }}" class="text-xl font-bold text-blue-600 flex items-center gap-2">
-                <i class="fa-solid fa-laptop-code"></i> HONG Laptop Shop
-            </a>
-            <a href="{{ route('shop.index') }}" class="text-sm text-gray-600 hover:text-blue-600">
-                <i class="fa-solid fa-arrow-left"></i> ត្រឡប់ក្រោយ
-            </a>
-        </div>
-    </nav>
+
+<nav id="main-nav"
+    class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200 mb-8 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
+        <a href="{{ route('shop.index') }}" class="text-xl font-bold text-blue-600 flex items-center gap-2">
+            <i class="fa-solid fa-laptop text-amber-400 text-[30px] me-4"></i> HONG COMPUTER
+        </a>
+        <a href="{{ route('shop.index') }}" class="inline-block ml-3 text-sm bg-red-600 text-white px-4 py-2 rounded transition duration-200 ease-in-out hover:-translate-y-0.5 hover:scale-105 hover:bg-red-500">
+            <i class="fa-solid fa-arrow-left"></i> ត្រឡប់ក្រោយ
+        </a>
+    </div>
+</nav>
 
     <div class="max-w-7xl mx-auto px-4 pb-12">
         <div class="bg-white p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
 
-            <!-- ផ្នែកខាងឆ្វេង៖ រូបភាព (Image Gallery) -->
+            <!--  (Image Gallery) -->
             <div>
                 <!-- រូបភាពធំ -->
                 <div class="border border-gray-200 rounded p-4 flex justify-center items-center h-[400px] mb-4">
@@ -38,7 +40,7 @@
                         <span class="text-gray-400">គ្មានរូបភាព</span>
                     @endif
                 </div>
-                <!-- រូបភាពតូចៗខាងក្រោម (Thumbnails Placeholder) -->
+                <!-- (Thumbnails Placeholder) -->
                 <div class="flex gap-2 overflow-x-auto">
                     @if($product->image)
                         <div class="border-2 border-orange-500 w-20 h-20 p-1 cursor-pointer">
@@ -55,7 +57,7 @@
                 </div>
             </div>
 
-            <!-- ផ្នែកខាងស្តាំ៖ ព័ត៌មានលម្អិត (Product Info) -->
+            <!-- (Product Info) -->
             <div>
                 <!-- ផ្កាយ Review (Placeholder) -->
                 
@@ -83,7 +85,7 @@ $avgRating = $product->reviews->avg('rating') ?? 0;
 
                 <!-- SKU & Brand -->
                 <div class="flex items-center gap-4 text-sm mb-6 pb-4 border-b border-gray-200">
-                    <div><span class="text-gray-500">SKU:</span> <strong
+                    <div><span class="text-gray-500">HC:</span> <strong
                             class="text-gray-800">COM-00{{ $product->id }}</strong></div>
                     <span
                         class="bg-red-50 text-red-600 px-3 py-1 rounded text-xs font-semibold cursor-pointer hover:bg-red-100">Message
@@ -156,8 +158,12 @@ $avgRating = $product->reviews->avg('rating') ?? 0;
                         class="flex-1 bg-[#ffd814] hover:bg-[#f7ca00] hover:text-white text-gray-900 font-bold py-3 px-4 rounded shadow-sm transition">
                         ADD TO CART
                     </button>
-                    <button onclick="alert('កំពុងបន្តទៅកាន់ការទូទាត់ប្រាក់!');"
+                    {{-- <button onclick="alert('កំពុងបន្តទៅកាន់ការទូទាត់ប្រាក់!');"
                         class="flex-1 bg-[#ffa41c] hover:bg-[#fa8900] hover:text-white text-gray-900 font-bold py-3 px-4 rounded shadow-sm transition">
+                        BUY NOW
+                    </button> --}}
+                    <button type="button" onclick="openRegisterModal()"
+                        class="flex-1 bg-[#ffa41c] hover:bg-[#fa8900] text-gray-900 font-bold py-3 px-4 rounded shadow-sm transition duration-150 ease-in-out">
                         BUY NOW
                     </button>
                 </div>
@@ -192,7 +198,7 @@ $avgRating = $product->reviews->avg('rating') ?? 0;
         </div>
     </div>
 
-<!-- ផ្នែកបង្ហាញ និងបញ្ចូលមតិយោបល់ (Reviews Section) -->
+
 <!-- ផ្នែកខាងក្រោម៖ Sidebar & Main Content -->
 <div class="max-w-7xl mx-auto px-4 pb-12 mt-8">
     <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -253,7 +259,7 @@ $avgRating = $product->reviews->avg('rating') ?? 0;
                     ({{ $product->reviews->count() }})</button>
             </div>
 
-            <!-- Tab 1: Description Content -->
+
             <!-- Tab 1: Description Content -->
             <div id="content-desc" class="text-sm text-gray-800 leading-loose mb-8">
                 <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 shadow-inner">
@@ -261,7 +267,7 @@ $avgRating = $product->reviews->avg('rating') ?? 0;
                         <!-- ប្រើ nl2br ដើម្បីបំប្លែងការចុះបន្ទាត់ពី Database ទៅជា <br> របស់ HTML -->
                         {!! nl2br(e($product->description)) !!}
                     @else
-                        <span class="text-gray-500 italic">មិនមានការពិពណ៌នាបន្ថែមសម្រាប់ម៉ូដែលនេះទេ។</span>
+                        <span class="text-gray-500 italic">No additional description is available for this model.</span>
                     @endif
                 </div>
             </div>
@@ -270,12 +276,12 @@ $avgRating = $product->reviews->avg('rating') ?? 0;
             <div id="content-reviews" class="hidden mb-8">
             <!-- ផ្នែកបង្ហាញ និងបញ្ចូលមតិយោបល់ (Reviews Section) -->
             <div class="mt-8 bg-white p-6 md:p-10 border border-gray-200">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">មតិយោបល់អតិថិជន (Customer Reviews)</h2>
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Customer Reviews</h2>
             
                 <!-- កន្លែងបង្ហាញសារជោគជ័យពេល Submit រួច -->
                 @if(session('success'))
                     <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-                        <p class="font-bold">ជោគជ័យ!</p>
+                        <p class="font-bold">Successfully!</p>
                         <p>{{ session('success') }}</p>
                     </div>
                 @endif
@@ -406,7 +412,7 @@ $avgRating = $product->reviews->avg('rating') ?? 0;
                                 </div>
 
                                 <!-- លេខកូដ និងឈ្មោះ -->
-                                <div class="text-[11px] text-gray-500 mb-1">SKU-00{{ $related->id }}</div>
+                                <div class="text-[11px] text-gray-500 mb-1">HC-00{{ $related->id }}</div>
                                 <h4 class="text-xs font-semibold text-gray-800 line-clamp-2 mb-2 leading-snug group-hover:text-blue-600">
                                     {{ $related->name }}
                                 </h4>
@@ -506,8 +512,21 @@ $avgRating = $product->reviews->avg('rating') ?? 0;
             contentDesc.classList.add('hidden');
         });
     });
-</script>
 
+
+    window.addEventListener('scroll', () => {
+            const navbar = document.getElementById('main-nav');
+            if (navbar) {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('shadow-md');
+                } else {
+                    navbar.classList.remove('shadow-md');
+                }
+            }
+        });
+    
+</script>
+@include('layouts.footer')
 </body>
 
 </html>

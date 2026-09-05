@@ -13,29 +13,31 @@
 <body class="bg-gray-100 font-sans antialiased">
 
     <!-- Navbar ខាងលើ -->
-    <nav class="bg-white shadow-sm border-b border-gray-200">
+    <nav class=sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200 mb-8 transition-all duration-300>
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-            <a href="{{ route('shop.index') }}" class="text-xl font-bold text-blue-600"><i class="fa-solid fa-laptop-code"></i>HONG Computer Shop</a>
-            <div>
-                @auth
-                    <a href="{{ route('admin.dashboard') }}"
-                        class="text-sm bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700">ទៅកាន់ Admin
-                        Dashboard</a>
-                @else
-                    <a href="{{ route('login') }}" class="text-sm text-gray-700 hover:text-blue-600 mr-4">ចូលគណនី
-                        (Login)</a>
-                    <a href="{{ route('register') }}"
-                        class="text-sm bg-gray-800 text-white px-4 py-2 rounded shadow hover:bg-gray-900">ចុះឈ្មោះ</a>
-                @endauth
-            </div>
+            <a href="{{ route('shop.index') }}" class="text-xl font-bold text-blue-600"><i class="fa-solid fa-laptop text-amber-400 text-[30px] me-4"></i> HONG COMPUTER</a>
+        <div>
+            @auth
+                <a href="{{ route('admin.dashboard') }}"
+                    class="text-sm bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 ">
+                    ទៅកាន់ Admin Dashboard
+                </a>
+            @else
+                <a href="{{ route('login') }}"
+                    class="inline-block text-sm bg-blue-800 text-white px-4 py-2 rounded transition duration-200 ease-in-out hover:-translate-y-0.5 hover:scale-105 hover:bg-blue-700">
+                    ចូលគណនី (Login)
+                </a>
+
+                <a href="{{ route('register') }}"
+                    class="inline-block ml-3 text-sm bg-red-600 text-white px-4 py-2 rounded transition duration-200 ease-in-out hover:-translate-y-0.5 hover:scale-105 hover:bg-red-500">
+                    ចុះឈ្មោះ
+                </a>
+            @endauth
+        </div>
         </div>
     </nav>
 
-    <!-- Header Banner -->
-    {{-- <div class="bg-blue-600 text-white py-12 text-center">
-        <h1 class="text-3xl font-bold mb-2">ស្វាគមន៍មកកាន់ហាងលក់កុំព្យូទ័រទំនើប</h1>
-        <p class="text-blue-100">ជម្រើសដ៏សម្បូរបែប គុណភាពខ្ពស់ និងតម្លៃសមរម្យសម្រាប់លោកអ្នក</p>
-    </div> --}}
+
     
     <div id="indicators-carousel" class="relative w-full" data-carousel="static">
         <!-- Carousel wrapper -->
@@ -113,27 +115,118 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-8">
 
         <!-- Sidebar Filter តាម Category -->
-        <div class="w-full md:w-1/4">
-            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
-                <h3 class="font-bold text-gray-800 mb-3 pb-2 border-b">ប្រភេទទំនិញ</h3>
-                <ul class="space-y-2">
-                    <li>
-                        <a href="{{ route('shop.index') }}"
-                            class="block px-3 py-2 rounded {{ request('category_id') ? 'text-gray-700 hover:bg-gray-100' : 'bg-blue-600 text-white font-bold' }}">
-                            ទំនិញទាំងអស់
+    <div class="w-full md:w-1/4">
+        <div class="bg-white rounded-xl shadow-sm border border-gray-100 relative z-30 font-['Kantumruy_Pro']">
+           
+            <!-- Header-->
+            <div class="bg-gray-900 text-white flex items-center justify-between px-4 py-3.5">
+                <div class="flex items-center gap-2.5">
+                    <span class="flex items-center justify-center size-10 rounded-full bg-amber-500 text-gray-950 text-sm">
+                        <i class="fa-solid fa-layer-group text-[20px]" style="color: rgb(255, 255, 255 );"></i>
+                    </span>
+                    <h3 class="font-bold text-sm tracking-wide uppercase">Categories</h3>
+                </div>
+                
+            </div>
+    
+          
+            <!-- Category Sidebar Navigation -->
+            <div class="p-2 space-y-1.5 bg-slate-50/70 rounded-2xl border border-slate-200/60 shadow-xs relative">
+            
+                <!-- ១. ទំនិញទាំងអស់ (All Products) -->
+                @php $isAllActive = !request('category_id'); @endphp
+                <a href="{{ route('shop.index') }}"
+                    class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ $isAllActive ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-slate-600 hover:bg-white hover:text-blue-600 hover:shadow-sm' }}">
+                    <div class="flex items-center gap-3">
+                        <div
+                            class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors {{ $isAllActive ? 'bg-white/20 text-white' : 'bg-slate-200/60 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600' }}">
+                            <i class="fa-solid fa-border-all text-xs"></i>
+                        </div>
+                        <span>ទំនិញទាំងអស់</span>
+                    </div>
+                    <i
+                        class="fa-solid fa-chevron-right text-[10px] transition-transform duration-200 group-hover:translate-x-0.5 {{ $isAllActive ? 'text-white' : 'text-slate-400 opacity-0 group-hover:opacity-100' }}"></i>
+                </a>
+            
+                <div class="my-1 border-t border-slate-200/60"></div>
+            
+                <!-- ២. រង្វិលជុំ Category + Hover Flyout Brands Menu -->
+                @foreach($categories as $category)
+                    @php $isActive = request('category_id') == $category->id; @endphp
+
+                    <!-- Parent Item (ត្រូវបន្ថែម relative និង group/item) -->
+                    <div class="relative group/item">
+                        <a href="{{ route('shop.index', ['category_id' => $category->id]) }}"
+                            class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ $isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-slate-600 hover:bg-white hover:text-blue-600 hover:shadow-sm' }}">
+
+                            <div class="flex items-center gap-3">
+                                <div
+                                    class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors {{ $isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 group-hover/item:bg-blue-50 group-hover/item:text-blue-600' }}">
+                                    <i class="{{ $category->icon ?? 'fa-solid fa-laptop' }} text-xs"></i>
+                                </div>
+                                <span>{{ $category->name }}</span>
+                            </div>
+
+                            <div class="flex items-center gap-2">
+                                @if(isset($category->products_count))
+                                    <span
+                                        class="text-[11px] font-semibold px-2 py-0.5 rounded-full transition-colors {{ $isActive ? 'bg-white/20 text-white' : 'bg-slate-200/70 text-slate-600 group-hover/item:bg-blue-100 group-hover/item:text-blue-700' }}">
+                                        {{ $category->products_count }}
+                                    </span>
+                                @endif
+                                <i
+                                    class="fa-solid fa-chevron-right text-[10px] transition-transform duration-200 group-hover/item:translate-x-0.5 {{ $isActive ? 'text-white' : 'text-slate-400 opacity-0 group-hover/item:opacity-100' }}"></i>
+                            </div>
                         </a>
-                    </li>
-                    @foreach($categories as $category)
-                        <li>
-                            <a href="{{ route('shop.index', ['category_id' => $category->id]) }}"
-                                class="block px-3 py-2 rounded {{ request('category_id') == $category->id ? 'bg-blue-600 text-white font-bold' : 'text-gray-700 hover:bg-gray-100' }}">
-                                {{ $category->name }}
-                            </a>
-                        </li>
-                    @endforeach
-                </ul>
+
+                        <!-- 3. Desktop Hover Submenu (Brand Flyout Card) -->
+                        <div
+                            class="hidden lg:block invisible opacity-0 translate-x-2 group-hover/item:visible group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-200 ease-out absolute left-full top-0 ml-2 w-56 bg-white border border-slate-200/80 rounded-2xl shadow-xl p-2 z-50">
+                            <div
+                                class="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1 flex items-center gap-1.5">
+                                <i class="fa-solid fa-tags text-[10px]"></i>
+                                <span>ម៉ាកយីហោ (Brands)</span>
+                            </div>
+
+                            <div class="space-y-0.5">
+                                {{-- ឧទាហរណ៍៖ ទាញ Brands ចេញពី Relationship $category->brands --}}
+                                @forelse($category->brands ?? [] as $brand)
+                                    <a href="{{ route('shop.index', ['category_id' => $category->id, 'brand_id' => $brand->id]) }}"
+                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
+                                        <span>{{ $brand->name }}</span>
+                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
+                                    </a>
+                                @empty
+                                    {{-- ករណីគ្មាន Brand ក្នុង DB (Static Sample) --}}
+                                    <a href="#"
+                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
+                                        <span>ASUS</span>
+                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
+                                    </a>
+                                    <a href="#"
+                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
+                                        <span>Dell</span>
+                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
+                                    </a>
+                                    <a href="#"
+                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
+                                        <span>MSI</span>
+                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
+                                    </a>
+                                    <a href="#"
+                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
+                                        <span>Apple (MacBook)</span>
+                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
+                                    </a>
+                                @endforelse
+                            </div>
+                        </div>
+
+                    </div>
+                @endforeach
             </div>
         </div>
+    </div>
 
         <!-- Product Grid List -->
         <div class="w-full md:w-3/4">
@@ -156,8 +249,8 @@
                     @foreach($products as $product)
                         <div
                             class=" bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                            <!-- រូបភាពទំនិញ -->
-                        <!-- រូបភាពទំនិញ (កូដថ្មីដែលបានកែសម្រួល) -->
+                           
+                        <!-- រូបភាពទំនិញ  -->
                         <div class="h-56 bg-white overflow-hidden flex items-center justify-center p-3 border-b border-gray-100">
                             @if($product->image)
                                 <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="max-h-full max-w-full object-contain">
@@ -200,6 +293,7 @@
         </div>
 
     </div>
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -246,8 +340,20 @@
 
             startAutoPlay();
         });
-    </script>
 
+
+    
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 20) {
+                    header.classList.add('py-1', 'shadow-md');
+        } else {
+                    header.classList.remove('py-1', 'shadow-md');
+        }
+    });
+        
+    </script>
+@include('layouts.footer')
 </body>
 
 </html>

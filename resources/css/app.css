@@ -1,5 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Battambang:wght@100;300;400;700;900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kantumruy+Pro:ital,wght@0,100..700;1,100..700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+    /* កំណត់ Font Khmer លើគ្រប់ Element លើកលែងតែ Icon របស់ FontAwesome */
+    *:not(i):not([class*="fa-"]) {
+        font-family: 'Kantumruy Pro', sans-serif !important;
+    }
+
+    /* រក្សា Font របស់ FontAwesome ឱ្យដើរធម្មតា */
+    .fa, .fas, .far, .fal, .fad, .fab, [class*="fa-"] {
+        font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands" !important;
+    }
+}

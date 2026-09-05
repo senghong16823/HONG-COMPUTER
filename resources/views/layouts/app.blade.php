@@ -7,6 +7,8 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
+        {{-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> --}}
+
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
@@ -28,9 +30,19 @@
             @endisset
 
             <!-- Page Content -->
-            <main>
-                {{ $slot }}
-            </main>
-        </div>
+            <div class="min-h-screen bg-gray-100 flex flex-col">
+               
+                <!-- Page Heading -->
+                @isset($header)
+   
+                @endisset
+            
+                <!-- Page Content -->
+                <main class="flex-grow">
+                    {{ $slot }}
+                </main>
+           
+
+            </div>
     </body>
 </html>

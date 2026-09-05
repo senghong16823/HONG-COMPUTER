@@ -20,7 +20,7 @@
                 <div class="p-6 text-gray-900 overflow-x-auto">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <th class="p-3 text-center">សកម្មភាព</th>
+                            <th class="p-3 text-center"></th>
                             <tr class="bg-gray-100 border-b">
                                 <th class="p-3">ល.រ</th>
                                 <th class="p-3">រូបភាព</th>
@@ -63,7 +63,7 @@
 
                                        
                                         <form action="{{ route('products.destroy', $product->id) }}" method="POST"
-                                            onsubmit="return confirm('តើលោកគ្រូពិតជាចង់លុបទំនិញនេះមែនទេ?');" class="inline">
+                                            onsubmit="return confirm('តើអ្នកពិតជាចង់លុបទំនិញនេះមែនទេ?');" class="inline">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">

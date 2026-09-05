@@ -1,8 +1,10 @@
 *.log
 .DS_Store
-.env
-.env.backup
-.env.production
+# .env files are tracked per user request
+# .env
+# .env.backup
+# .env.production
+!.env*
 .phpactor.json
 .phpunit.result.cache
 /.codex
