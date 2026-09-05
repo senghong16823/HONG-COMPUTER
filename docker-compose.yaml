@@ -29,18 +29,19 @@ services:
             - laravel
 
     db:
-        image: mysql:8.0
+        image: postgres:16-alpine
         container_name: laravel_db
         restart: unless-stopped
         environment:
-            MYSQL_DATABASE: ${DB_DATABASE:-crud_app}
-            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+            POSTGRES_DB: ${DB_DATABASE:-ecommerce}
+            POSTGRES_USER: ${DB_USERNAME:-postgres}
+            POSTGRES_PASSWORD: ${DB_PASSWORD:-secret}
         ports:
-            - "${FORWARD_DB_PORT:-33060}:3306"
+            - "${FORWARD_DB_PORT:-54320}:5432"
         volumes:
-            - dbdata:/var/lib/mysql
+            - pgdata:/var/lib/postgresql/data
         healthcheck:
-            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+            test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME:-postgres} -d ${DB_DATABASE:-ecommerce}"]
             interval: 5s
             timeout: 5s
             retries: 10
@@ -52,5 +53,5 @@ networks:
         driver: bridge
 
 volumes:
-    dbdata:
+    pgdata:
         driver: local
