@@ -4,11 +4,14 @@
         <div class="flex justify-between h-16">
             <div class="flex">
                 <!-- Logo -->
-                {{-- <div class="shrink-0 flex items-center">
-                    <a href="{{ route('dashboard') }}">
-                        <x-application-logo class="block h-9 w-auto fill-current text-gray-800" />
+                <div class="shrink-0 flex items-center">
+                    <a href="{{ route('admin.dashboard') }}" class="flex items-center gap-2 font-bold text-slate-800">
+                        <div class="w-8 h-8 bg-slate-900 rounded-lg flex items-center justify-center text-white text-sm shadow-sm">
+                            <i class="fa-solid fa-store text-amber-500"></i>
+                        </div>
+                        <span class="text-sm font-bold">HONG STORE</span>
                     </a>
-                </div> --}}
+                </div>
 
                 <!-- Navigation Links (Desktop) -->
                 <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex ">

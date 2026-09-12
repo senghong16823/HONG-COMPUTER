@@ -29,7 +29,7 @@
                 <a href="{{ route('categories.create') }}"
                     class="bg-blue-600 hover:bg-blue-700 text-white font-medium px-5 py-2.5 rounded-xl shadow-sm hover:shadow transition duration-200 flex items-center gap-2">
                     <i class="fa-solid fa-plus"></i>
-                    <span>+ បង្កើតប្រភេទថ្មី</span>
+                    <span>បង្កើតប្រភេទថ្មី</span>
                 </a>
             </div>
 
@@ -80,7 +80,7 @@
                                             <a href="{{ route('categories.edit', $category->id) }}"
                                                 class="bg-green-500 p-2 text-white  hover:bg-green-600 rounded-lg transition duration-150"
                                                 title="កែប្រែ">
-                                                <i class="fa-solid fa-pen-to-square text-base"></i>Edit
+                                                <i class="fa-solid fa-pen-to-square text-small"></i> Edit
                                             </a>
 
                                             {{-- button Delete --}}
@@ -91,7 +91,7 @@
                                                 <button type="submit"
                                                     class="bg-red-500 p-2 text-white hover:bg-red-600 rounded-lg transition duration-150 cursor-pointer"
                                                     title="លុបចេញ">
-                                                    <i class="fa-solid fa-trash-can text-base"></i>Delete
+                                                    <i class="fa-solid fa-trash-can text-small"></i> Delete
                                                 </button>
                                             </form>
                                         </div>
