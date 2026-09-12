@@ -1,532 +1,409 @@
-<!DOCTYPE html>
-<html lang="km">
+<x-storefront-layout :title="$product->name">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ $product->name }} - ព័ត៌មានលម្អិត</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <!-- បញ្ចូល FontAwesome សម្រាប់ Icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
-
-<body class="bg-gray-50 font-sans antialiased">
-
-    <!-- Navbar -->
-
-<nav id="main-nav"
-    class="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200 mb-8 transition-all duration-300">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-        <a href="{{ route('shop.index') }}" class="text-xl font-bold text-blue-600 flex items-center gap-2">
-            <i class="fa-solid fa-laptop text-amber-400 text-[30px] me-4"></i> HONG COMPUTER
-        </a>
-        <a href="{{ route('shop.index') }}" class="inline-block ml-3 text-sm bg-red-600 text-white px-4 py-2 rounded transition duration-200 ease-in-out hover:-translate-y-0.5 hover:scale-105 hover:bg-red-500">
-            <i class="fa-solid fa-arrow-left"></i> ត្រឡប់ក្រោយ
-        </a>
+    <!-- Breadcrumbs -->
+    <div class="bg-white border-b border-slate-200 py-3">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <nav class="flex items-center gap-2 text-xs text-slate-500 font-medium">
+                <a href="{{ route('shop.index') }}" class="hover:text-blue-600 transition flex items-center gap-1">
+                    <i class="fa-solid fa-house text-[10px]"></i> ទំព័រដើម
+                </a>
+                <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
+                <a href="{{ route('shop.index', ['category_id' => $product->category_id]) }}" class="hover:text-blue-600 transition">
+                    {{ $product->category->name ?? 'កុំព្យូទ័រ' }}
+                </a>
+                @if($product->brand)
+                    <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
+                    <a href="{{ route('shop.index', ['brand_id' => $product->brand_id]) }}" class="hover:text-blue-600 transition">
+                        {{ $product->brand->name }}
+                    </a>
+                @endif
+                <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
+                <span class="text-slate-800 font-bold truncate max-w-xs">{{ $product->name }}</span>
+            </nav>
+        </div>
     </div>
-</nav>
 
-    <div class="max-w-7xl mx-auto px-4 pb-12">
-        <div class="bg-white p-6 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-10">
+    <!-- Product Details Main Area -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10" x-data="{ quantity: 1, maxStock: {{ $product->stock }} }">
+        <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden p-6 sm:p-10 grid grid-cols-1 lg:grid-cols-12 gap-10">
 
-            <!--  (Image Gallery) -->
-            <div>
-                <!-- រូបភាពធំ -->
-                <div class="border border-gray-200 rounded p-4 flex justify-center items-center h-[400px] mb-4">
+            <!-- 1. Left Gallery (Col 5) -->
+            <div class="lg:col-span-5 space-y-4">
+                <div class="h-80 sm:h-96 rounded-2xl bg-slate-50 border border-slate-100 flex items-center justify-center p-6 overflow-hidden relative group">
                     @if($product->image)
                         <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
-                            class="max-h-full max-w-full object-contain">
+                             class="max-h-full max-w-full object-contain group-hover:scale-110 transition duration-300">
                     @else
-                        <span class="text-gray-400">គ្មានរូបភាព</span>
-                    @endif
-                </div>
-                <!-- (Thumbnails Placeholder) -->
-                <div class="flex gap-2 overflow-x-auto">
-                    @if($product->image)
-                        <div class="border-2 border-orange-500 w-20 h-20 p-1 cursor-pointer">
-                            <img src="{{ asset($product->image) }}" class="h-full w-full object-contain">
+                        <div class="text-center text-slate-300">
+                            <i class="fa-solid fa-laptop text-6xl mb-2"></i>
+                            <p class="text-xs">គ្មានរូបភាព</p>
                         </div>
                     @endif
-                    <!-- ប្រអប់តំណាងរូបភាពផ្សេងទៀត (បើមានថ្ងៃក្រោយ) -->
-                    <div
-                        class="border border-gray-200 w-20 h-20 flex justify-center items-center text-xs text-gray-400 cursor-pointer hover:border-gray-400">
-                        រូបទី២</div>
-                    <div
-                        class="border border-gray-200 w-20 h-20 flex justify-center items-center text-xs text-gray-400 cursor-pointer hover:border-gray-400">
-                        រូបទី៣</div>
-                </div>
-            </div>
 
-            <!-- (Product Info) -->
-            <div>
-                <!-- ផ្កាយ Review (Placeholder) -->
-                
-                <div class="text-gray-400 text-sm mb-2 flex items-center gap-1">
-                    @php
-$avgRating = $product->reviews->avg('rating') ?? 0;
-                    @endphp
-                
-                    <div class="text-yellow-400">
-                        @for($i = 1; $i <= 5; $i++)
-                            @if($i <= round($avgRating))
-                                <i class="fa-solid fa-star"></i>
-                            @else
-                                <i class="fa-solid fa-star text-gray-300"></i>
-                            @endif
-                        @endfor
-                    </div>
-                    <span class="ml-2 text-blue-600 hover:underline cursor-pointer font-semibold">
-                        ({{ $product->reviews->count() }} reviews)
-                    </span>
-                </div>
-
-                <!-- ឈ្មោះកុំព្យូទ័រ -->
-                <h1 class="text-2xl font-bold text-gray-900 mb-4 leading-tight">{{ $product->name }}</h1>
-
-                <!-- SKU & Brand -->
-                <div class="flex items-center gap-4 text-sm mb-6 pb-4 border-b border-gray-200">
-                    <div><span class="text-gray-500">HC:</span> <strong
-                            class="text-gray-800">COM-00{{ $product->id }}</strong></div>
-                    <span
-                        class="bg-red-50 text-red-600 px-3 py-1 rounded text-xs font-semibold cursor-pointer hover:bg-red-100">Message
-                        Seller</span>
-                    <span class="text-green-600 font-bold italic">{{ $product->category->name ?? 'BRAND' }}</span>
-                </div>
-
-                <!-- លក្ខណៈបច្ចេកទេស (Specs List) -->
-                <div class="text-sm text-gray-800 space-y-1.5 mb-6">
-                    <div>- CPU: {{ $product->cpu ?? 'មិនបានបញ្ជាក់' }}</div>
-                    <div>- RAM: {{ $product->ram ?? 'មិនបានបញ្ជាក់' }}</div>
-                    <div>- Storage: {{ $product->storage ?? 'មិនបានបញ្ជាក់' }}</div>
-                    <div>- OS: DOS (No operating system)</div>
-                    <div>- Graphic: Intel Graphics (Onboard)</div>
-                    <div>- Display: 15.6" IPS (1920 x 1080)</div>
-                    <div>- Warranty: 1 Year</div>
-                </div>
-
-
-                <!-- តម្លៃ និង ចំនួន (បានកែសម្រួលបន្ថែម ID) -->
-                <div class="space-y-4 mb-6">
-                    <div class="flex items-center">
-                        <span class="w-24 text-gray-500 text-sm">Price:</span>
-                        <!-- បន្ថែម id="unit-price" និង data-price សម្រាប់ទុកតម្លៃដើម -->
-                        <span id="unit-price" data-price="{{ $product->price }}"
-                            class="text-3xl font-extrabold text-gray-900">${{ number_format($product->price, 2) }}</span>
-                        <span class="text-sm text-gray-500 ml-1">/Pc</span>
-                    </div>
-                
-                    <div class="flex items-center">
-                        <span class="w-24 text-gray-500 text-sm">Quantity:</span>
-                        <div class="flex border border-gray-300 rounded w-28 h-9 overflow-hidden">
-                            <!-- បន្ថែម id="btn-minus" -->
-                            <button id="btn-minus" type="button"
-                                class="w-8 text-gray-600 bg-gray-50 hover:bg-gray-200 focus:outline-none">-</button>
-                
-                            <!-- បន្ថែម id="quantity-input" និងដាក់ readonly កុំឲ្យគេវាយអក្សរចូលបាន -->
-                            <input id="quantity-input" type="text" value="1" readonly
-                                class="w-full text-center border-none p-0 focus:ring-0 text-sm font-semibold bg-white">
-                
-                            
-                            <button id="btn-plus" type="button"
-                                class="w-8 text-gray-600 bg-gray-50 hover:bg-gray-200 focus:outline-none">+</button>
-                        </div>
-                    </div>
-                
-                    <div class="flex items-center">
-                        <span class="w-24 text-gray-500 text-sm">Total Price:</span>
-                        <!-- បន្ថែម id="total-price" សម្រាប់បង្ហាញលទ្ធផលតម្លៃសរុប -->
-                        <span id="total-price"
-                            class="text-xl font-extrabold text-gray-900">${{ number_format($product->price, 2) }}</span>
-                    </div>
-                </div>
-
-                <!-- លក្ខខណ្ឌបង់រំលស់ -->
-                <div class="mb-8">
-                    <div class="text-green-600 font-bold text-sm mb-2">លក្ខខណ្ឌនៃការបង់រំលស់</div>
-                    <div class="flex items-center gap-3 text-sm">
-                        <div class="flex items-center justify-center bg-white border border-gray-200 px-1 py-0.5 rounded shadow-sm">
-                            <img src="{{ asset('https://www.aeon.com.kh/wp-content/uploads/2019/12/AEONSPB-logo.png') }}" alt="AEON Logo" class="h-4 w-auto object-contain">
-                        </div>
-                        <span>ក្នុងមួយខែបង់ត្រឹមតែ <strong
-                                class="text-red-600">${{ number_format($product->price / 12, 2) }}</strong></span>
-                    </div>
-                </div>
-
-                <!-- Action Buttons -->
-                <div class="flex gap-4 mb-6">
-                    <button onclick="alert('បានបន្ថែមចូលកន្ត្រក!');"
-                        class="flex-1 bg-[#ffd814] hover:bg-[#f7ca00] hover:text-white text-gray-900 font-bold py-3 px-4 rounded shadow-sm transition">
-                        ADD TO CART
-                    </button>
-                    {{-- <button onclick="alert('កំពុងបន្តទៅកាន់ការទូទាត់ប្រាក់!');"
-                        class="flex-1 bg-[#ffa41c] hover:bg-[#fa8900] hover:text-white text-gray-900 font-bold py-3 px-4 rounded shadow-sm transition">
-                        BUY NOW
-                    </button> --}}
-                    <button type="button" onclick="openRegisterModal()"
-                        class="flex-1 bg-[#ffa41c] hover:bg-[#fa8900] text-gray-900 font-bold py-3 px-4 rounded shadow-sm transition duration-150 ease-in-out">
-                        BUY NOW
-                    </button>
-                </div>
-
-                <!-- Wishlist & Compare -->
-                <div class="flex gap-4 mb-6">
-                    <button
-                        class="w-[150px] border border-teal-400 text-teal-600 py-2 rounded text-sm hover:bg-teal-600 hover:text-white transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-heart"></i> Add to wishlist
-                    </button>
-                    <button
-                        class="w-[150px] border border-blue-400 text-blue-600 py-2 rounded text-sm hover:bg-blue-600 hover:text-white transition flex items-center justify-center gap-2">
-                        <i class="fa-solid fa-arrow-turn-up"></i> Add to compare
-                    </button>
-                </div>
-
-                <!-- Share Social Media -->
-                <div class="flex items-center gap-3 text-sm">
-                    <span class="text-gray-500">Share:</span>
-                    <a href="#"
-                        class="bg-[#3b5998] text-white w-7 h-7 flex items-center justify-center rounded hover:opacity-80"><i
-                            class="fa-brands fa-facebook-f"></i></a>
-                    <a href="#"
-                        class="bg-[#007bb5] text-white w-7 h-7 flex items-center justify-center rounded hover:opacity-80"><i
-                            class="fa-brands fa-linkedin-in"></i></a>
-                    <a href="#"
-                        class="bg-[#00aced] text-white w-7 h-7 flex items-center justify-center rounded hover:opacity-80"><i
-                            class="fa-brands fa-telegram"></i></a>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-<!-- ផ្នែកខាងក្រោម៖ Sidebar & Main Content -->
-<div class="max-w-7xl mx-auto px-4 pb-12 mt-8">
-    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-
-        <!-- ================= ខាងឆ្វេង៖ Top Selling Products ================= -->
-        <div class="lg:col-span-1 bg-white p-6 rounded-lg border border-gray-100 shadow-sm h-fit">
-            <h3 class="font-bold text-gray-900 mb-6 text-lg">Top Selling Products</h3>
-            <div class="space-y-6">
-
-                <!-- ផលិតផលទី១ (Placeholder) -->
-                <div class="flex gap-4 items-start cursor-pointer hover:bg-gray-50 p-2 -mx-2 rounded transition">
-                    <div
-                        class="w-20 h-20 bg-white border border-gray-200 flex-shrink-0 flex items-center justify-center p-1 rounded">
-                        <!-- បើមានរូបពិត ដាក់ <img> ទីនេះ -->
-                        <i class="fa-solid fa-print text-gray-300 text-2xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-xs text-gray-800 font-semibold line-clamp-2 mb-1 leading-snug">Printer Epson
-                            EcoTank L3210 A4 Color</h4>
-                        <div class="text-yellow-400 text-[10px] mb-1"><i class="fa-solid fa-star"></i><i
-                                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                class="fa-solid fa-star"></i><i class="fa-solid fa-star text-gray-300"></i></div>
-                        <div class="text-xs text-gray-500 mb-1">PRE-L3210</div>
-                        <div class="font-bold text-gray-900 text-sm">$125</div>
-                    </div>
-                </div>
-
-                <!-- ផលិតផលទី២ -->
-                <div class="flex gap-4 items-start cursor-pointer hover:bg-gray-50 p-2 -mx-2 rounded transition">
-                    <div
-                        class="w-20 h-20 bg-white border border-gray-200 flex-shrink-0 flex items-center justify-center p-1 rounded">
-                        <i class="fa-solid fa-laptop text-gray-300 text-2xl"></i>
-                    </div>
-                    <div>
-                        <h4 class="text-xs text-gray-800 font-semibold line-clamp-2 mb-1 leading-snug">Acer Aspire Lite
-                            AL15-32P-C5CE-N4500</h4>
-                        <div class="text-yellow-400 text-[10px] mb-1"><i class="fa-solid fa-star"></i><i
-                                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i
-                                class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></div>
-                        <div class="text-xs text-gray-500 mb-1">LAL-0027</div>
-                        <div class="font-bold text-gray-900 text-sm">$369</div>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-
-        <!-- ================= ខាងស្តាំ៖ Tabs, Description & Related Products ================= -->
-        <div class="lg:col-span-3">
-
-            <!-- Tabs Navigation -->
-            <div class="flex border-b border-gray-200 mb-6 gap-8">
-                <button id="btn-tab-desc"
-                    class="pb-3 font-bold text-gray-900 border-b-2 border-gray-900 focus:outline-none">Description</button>
-                <button id="btn-tab-reviews"
-                    class="pb-3 font-bold text-gray-500 border-b-2 border-transparent hover:text-gray-900 focus:outline-none">Reviews
-                    ({{ $product->reviews->count() }})</button>
-            </div>
-
-
-            <!-- Tab 1: Description Content -->
-            <div id="content-desc" class="text-sm text-gray-800 leading-loose mb-8">
-                <div class="bg-gray-50 p-6 rounded-lg border border-gray-100 shadow-inner">
-                    @if($product->description)
-                        <!-- ប្រើ nl2br ដើម្បីបំប្លែងការចុះបន្ទាត់ពី Database ទៅជា <br> របស់ HTML -->
-                        {!! nl2br(e($product->description)) !!}
+                    @if($product->stock > 0)
+                        <span class="absolute top-4 left-4 px-3 py-1 bg-emerald-500 text-white rounded-xl text-xs font-bold shadow-sm">
+                            <i class="fa-solid fa-check"></i> មានក្នុងស្តុក
+                        </span>
                     @else
-                        <span class="text-gray-500 italic">No additional description is available for this model.</span>
+                        <span class="absolute top-4 left-4 px-3 py-1 bg-rose-500 text-white rounded-xl text-xs font-bold shadow-sm">
+                            អស់ពីស្តុក
+                        </span>
                     @endif
+                </div>
+
+                <!-- Guarantee Badges -->
+                <div class="grid grid-cols-3 gap-3 text-center pt-2">
+                    <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                        <i class="fa-solid fa-shield-halved text-blue-600 text-base mb-1"></i>
+                        <p class="text-[11px] font-bold text-slate-800">ធានាផ្លូវការ</p>
+                        <p class="text-[10px] text-slate-400">១ ឆ្នាំពេញ</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                        <i class="fa-solid fa-truck-fast text-emerald-600 text-base mb-1"></i>
+                        <p class="text-[11px] font-bold text-slate-800">ដឹកជញ្ជូនរហ័ស</p>
+                        <p class="text-[10px] text-slate-400">២៥ ខេត្ត-ក្រុង</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-2xl border border-slate-100">
+                        <i class="fa-solid fa-rotate-left text-amber-500 text-base mb-1"></i>
+                        <p class="text-[11px] font-bold text-slate-800">ប្តូរទំនិញថ្មី</p>
+                        <p class="text-[10px] text-slate-400">ក្នុងរយៈពេល ៧ថ្ងៃ</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- Tab 2: Reviews Content (លាក់ទុកជាស្រេច Hidden) -->
-            <div id="content-reviews" class="hidden mb-8">
-            <!-- ផ្នែកបង្ហាញ និងបញ្ចូលមតិយោបល់ (Reviews Section) -->
-            <div class="mt-8 bg-white p-6 md:p-10 border border-gray-200">
-                <h2 class="text-2xl font-bold text-gray-900 mb-6 border-b pb-4">Customer Reviews</h2>
-            
-                <!-- កន្លែងបង្ហាញសារជោគជ័យពេល Submit រួច -->
-                @if(session('success'))
-                    <div class="bg-green-50 border-l-4 border-green-500 text-green-700 p-4 mb-6" role="alert">
-                        <p class="font-bold">Successfully!</p>
-                        <p>{{ session('success') }}</p>
+            <!-- 2. Right Product Info & Actions (Col 7) -->
+            <div class="lg:col-span-7 flex flex-col justify-between space-y-6">
+                <div class="space-y-4">
+                    <!-- Brand & Category Strip -->
+                    <div class="flex items-center gap-3">
+                        @if($product->brand)
+                            <a href="{{ route('shop.index', ['brand_id' => $product->brand_id]) }}"
+                               class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-900 text-white text-xs font-bold shadow-sm hover:bg-slate-800 transition">
+                                <i class="fa-solid fa-award text-amber-400 text-[10px]"></i>
+                                <span>{{ $product->brand->name }}</span>
+                            </a>
+                        @endif
+                        <span class="inline-flex items-center px-3 py-1 rounded-xl bg-blue-50 text-blue-700 text-xs font-semibold border border-blue-100">
+                            {{ $product->category->name ?? 'កុំព្យូទ័រ' }}
+                        </span>
+                        <span class="text-xs text-slate-400">
+                            កូដសម្គាល់៖ <strong class="text-slate-700 font-mono">HC-{{ str_pad($product->id, 4, '0', STR_PAD_LEFT) }}</strong>
+                        </span>
                     </div>
-                @endif
-            
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
-            
-                    <!-- ខាងឆ្វេង៖ Form សម្រាប់បញ្ចូល Review ថ្មី -->
-                    <div class="bg-gray-50 p-6 rounded border border-gray-200 h-fit">
-                        <h3 class="text-lg font-bold mb-4">សរសេរមតិយោបល់របស់អ្នកទីនេះ</h3>
-                        <form action="{{ route('reviews.store', $product->id) }}" method="POST">
-                            @csrf
-                            <div class="mb-4">
-                                <label class="block text-sm font-bold text-gray-700 mb-2">ឈ្មោះរបស់អ្នក <span
-                                        class="text-red-500">*</span></label>
-                                <input type="text" name="name" required placeholder="ឧ. សុខ សាន្ត"
-                                    class="w-full border-gray-300 rounded focus:ring-blue-500 px-4 py-2">
+
+                    <!-- Title -->
+                    <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+                        {{ $product->name }}
+                    </h1>
+
+                    <!-- Rating Summary -->
+                    @php $avgRating = $product->reviews->avg('rating') ?? 5; @endphp
+                    <div class="flex items-center gap-2 text-xs">
+                        <div class="flex items-center gap-1 text-amber-400">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="fa-solid fa-star text-xs {{ $i <= round($avgRating) ? 'text-amber-400' : 'text-slate-200' }}"></i>
+                            @endfor
+                        </div>
+                        <span class="font-bold text-slate-700">{{ number_format($avgRating, 1) }}</span>
+                        <span class="text-slate-400">|</span>
+                        <a href="#reviews" class="text-blue-600 hover:underline font-medium">
+                            {{ $product->reviews->count() }} ការវាយតម្លៃ (Reviews)
+                        </a>
+                    </div>
+
+                    <!-- Price Section -->
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex items-center justify-between">
+                        <div>
+                            <span class="text-xs text-slate-400 font-medium">តម្លៃលក់ជូនពិសេស</span>
+                            <div class="flex items-baseline gap-2">
+                                <span class="text-3xl font-extrabold text-red-600">
+                                    ${{ number_format($product->price, 2) }}
+                                </span>
+                                <span class="text-xs text-slate-400">/ គ្រឿង</span>
                             </div>
-                            <div class="mb-4">
-                                <label class="block text-sm font-bold text-gray-700 mb-2">ពិន្ទុផ្កាយ <span
-                                        class="text-red-500">*</span></label>
-                                <select name="rating" required
-                                    class="w-full border-gray-300 rounded focus:ring-blue-500 px-4 py-2 text-yellow-500 font-bold bg-white">
-                                    <option value="5">⭐⭐⭐⭐⭐ (5 ផ្កាយ - ល្អឥតខ្ចោះ)</option>
-                                    <option value="4">⭐⭐⭐⭐ (4 ផ្កាយ - ល្អណាស់)</option>
-                                    <option value="3">⭐⭐⭐ (3 ផ្កាយ - ល្អបង្គួរ)</option>
-                                    <option value="2">⭐⭐ (2 ផ្កាយ - ធម្មតា)</option>
-                                    <option value="1">⭐ (1 ផ្កាយ - ត្រូវកែលម្អ)</option>
-                                </select>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-slate-500 font-medium">ចំនួនស្តុកនៅសល់</span>
+                            <p class="text-sm font-bold {{ $product->stock > 0 ? 'text-emerald-600' : 'text-rose-600' }}">
+                                {{ $product->stock > 0 ? $product->stock . ' គ្រឿង' : 'អស់ពីស្តុក' }}
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Quick Technical Highlights -->
+                    <div class="space-y-2 text-xs text-slate-600 pt-2">
+                        <p class="font-bold text-slate-800 uppercase tracking-wider text-[11px]">លក្ខណៈបច្ចេកទេសសង្ខេប៖</p>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                                <p class="text-[10px] text-slate-400">អង្គប្រតិបត្តិការ (CPU)</p>
+                                <p class="font-bold text-slate-800 font-mono text-xs truncate">{{ $product->cpu ?? 'មិនបានបញ្ជាក់' }}</p>
                             </div>
-                            <div class="mb-6">
-                                <label class="block text-sm font-bold text-gray-700 mb-2">មតិយោបល់ <span
-                                        class="text-red-500">*</span></label>
-                                <textarea name="comment" rows="3" required placeholder="តើលោកអ្នកយល់យ៉ាងណាដែរចំពោះកុំព្យូទ័រនេះ?"
-                                    class="w-full border-gray-300 rounded focus:ring-blue-500 px-4 py-2"></textarea>
+                            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                                <p class="text-[10px] text-slate-400">អង្គចងចាំ (RAM)</p>
+                                <p class="font-bold text-slate-800 font-mono text-xs truncate">{{ $product->ram ?? 'មិនបានបញ្ជាក់' }}</p>
                             </div>
-                            <button type="submit"
-                                class="w-full bg-blue-600 text-white font-bold py-3 rounded shadow hover:bg-blue-700 transition">
-                                <i class="fa-solid fa-paper-plane mr-2"></i> បញ្ជូនការវាយតម្លៃ
+                            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-100">
+                                <p class="text-[10px] text-slate-400">ទំហំផ្ទុក (Storage)</p>
+                                <p class="font-bold text-slate-800 font-mono text-xs truncate">{{ $product->storage ?? 'មិនបានបញ្ជាក់' }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quantity Modifier & Action Buttons -->
+                <div class="space-y-5 pt-4 border-t border-slate-100">
+                    @if($product->stock > 0)
+                        <div class="flex items-center gap-4">
+                            <span class="text-xs font-bold text-slate-700">ចំនួនទិញ៖</span>
+                            <div class="flex items-center border border-slate-200 rounded-xl overflow-hidden bg-white shadow-sm">
+                                <button type="button" @click="if (quantity > 1) quantity--"
+                                        class="w-9 h-9 flex items-center justify-center bg-slate-50 hover:bg-slate-100 text-slate-600 transition">
+                                    <i class="fa-solid fa-minus text-xs"></i>
+                                </button>
+                                <input type="number" x-model.number="quantity" readonly
+                                       class="w-14 text-center border-none p-0 focus:ring-0 text-sm font-bold text-slate-900 bg-white">
+                                <button type="button" @click="if (quantity < maxStock) quantity++"
+                                        class="w-9 h-9 flex items-center justify-center bg-slate-50 hover:bg-slate-100 text-slate-600 transition">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                            <span class="text-xs text-slate-400">
+                                សរុប៖ <strong class="text-slate-900 font-bold" x-text="'$' + (quantity * {{ $product->price }}).toFixed(2)">${{ number_format($product->price, 2) }}</strong>
+                            </span>
+                        </div>
+
+                        <!-- Add to Cart & Buy Now Buttons -->
+                        <div class="flex flex-col sm:flex-row gap-3">
+                            <!-- Add to Cart (AJAX) -->
+                            <button type="button"
+                                    @click="addToCart({{ $product->id }}, quantity)"
+                                    class="flex-1 py-3.5 px-6 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-2xl font-bold text-sm transition flex items-center justify-center gap-2 border border-blue-200 active:scale-95 cursor-pointer">
+                                <i class="fa-solid fa-cart-plus text-base"></i>
+                                <span>បន្ថែមចូលកន្ត្រក (Add to Cart)</span>
                             </button>
-                        </form>
-                    </div>
-            
-                    <!-- ខាងស្តាំ៖ បញ្ជី Reviews ដែលអតិថិជនបានវាយតម្លៃរួច -->
+
+                            <!-- Buy Now (Direct Checkout) -->
+                            <form method="POST" action="{{ route('cart.add') }}" class="flex-1">
+                                @csrf
+                                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                                <input type="hidden" name="quantity" :value="quantity">
+                                <button type="submit"
+                                        class="w-full py-3.5 px-6 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl font-bold text-sm transition shadow-lg shadow-blue-500/30 flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                                    <i class="fa-solid fa-bolt text-amber-300"></i>
+                                    <span>ទិញឥឡូវនេះ (Buy Now)</span>
+                                </button>
+                            </form>
+                        </div>
+                    @else
+                        <div class="p-4 bg-rose-50 border border-rose-100 rounded-2xl text-center space-y-2">
+                            <p class="text-sm font-bold text-rose-700">ទំនិញនេះបានអស់ពីស្តុកបណ្តោះអាសន្ន!</p>
+                            <p class="text-xs text-rose-500">លោកអ្នកអាចទាក់ទងមកកាន់យើងខ្ញុំដើម្បីកក់ទុកមុនតាមរយៈ Telegram។</p>
+                            <a href="https://t.me/{{ ltrim(\App\Models\Setting::get('telegram_number', '093757079'), '0') }}" target="_blank"
+                               class="inline-flex items-center gap-2 px-4 py-2 bg-sky-500 text-white rounded-xl text-xs font-bold shadow-sm">
+                                <i class="fa-brands fa-telegram"></i> ទាក់ទងកក់ទំនិញ
+                            </a>
+                        </div>
+                    @endif
+                </div>
+
+            </div>
+        </div>
+
+        <!-- 3. Description & Specs Section -->
+        <div class="mt-10 bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden p-6 sm:p-10 space-y-8">
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-circle-info text-blue-600"></i>
+                    <span>ការពិពណ៌នាលម្អិតពីទំនិញ</span>
+                </h3>
+                <div class="mt-4 text-sm text-slate-700 leading-relaxed space-y-4">
+                    @if($product->description)
+                        <p class="whitespace-pre-line">{{ $product->description }}</p>
+                    @else
+                        <p class="text-slate-400 italic">មិនមានការពិពណ៌នាបន្ថែមសម្រាប់ម៉ូឌែលនេះទេ។</p>
+                    @endif
+                </div>
+            </div>
+
+            <!-- Full Specifications Table -->
+            <div>
+                <h3 class="text-lg font-bold text-slate-900 border-b border-slate-100 pb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-blue-600"></i>
+                    <span>លក្ខណៈបច្ចេកទេសពេញលេញ (Specifications)</span>
+                </h3>
+                <div class="mt-4 overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-700 border-collapse">
+                        <tbody class="divide-y divide-slate-100">
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3 px-4 font-bold text-slate-500 w-1/3 bg-slate-50/50">ម៉ូឌែលកុំព្យូទ័រ</td>
+                                <td class="py-3 px-4 font-semibold text-slate-800">{{ $product->name }}</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3 px-4 font-bold text-slate-500 bg-slate-50/50">ម៉ាកយីហោ (Brand)</td>
+                                <td class="py-3 px-4">{{ $product->brand->name ?? 'មិនបានបញ្ជាក់' }}</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3 px-4 font-bold text-slate-500 bg-slate-50/50">ប្រភេទ (Category)</td>
+                                <td class="py-3 px-4">{{ $product->category->name ?? 'មិនបានបញ្ជាក់' }}</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3 px-4 font-bold text-slate-500 bg-slate-50/50">អង្គប្រតិបត្តិការ (CPU)</td>
+                                <td class="py-3 px-4 font-mono">{{ $product->cpu ?? 'N/A' }}</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3 px-4 font-bold text-slate-500 bg-slate-50/50">អង្គចងចាំ (RAM)</td>
+                                <td class="py-3 px-4 font-mono">{{ $product->ram ?? 'N/A' }}</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3 px-4 font-bold text-slate-500 bg-slate-50/50">ទំហំផ្ទុកទិន្នន័យ (Storage)</td>
+                                <td class="py-3 px-4 font-mono">{{ $product->storage ?? 'N/A' }}</td>
+                            </tr>
+                            <tr class="hover:bg-slate-50">
+                                <td class="py-3 px-4 font-bold text-slate-500 bg-slate-50/50">ការធានា (Warranty)</td>
+                                <td class="py-3 px-4 text-emerald-700 font-semibold">១ ឆ្នាំពេញ ពីក្រុមហ៊ុនផ្លូវការ</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Customer Reviews Section -->
+        <div id="reviews" class="mt-10 bg-white rounded-3xl border border-slate-200/80 shadow-sm overflow-hidden p-6 sm:p-10 space-y-8">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-slate-100 pb-4">
+                <div>
+                    <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-comments text-blue-600"></i>
+                        <span>ការវាយតម្លៃរបស់អតិថិជន ({{ $product->reviews->count() }})</span>
+                    </h3>
+                    <p class="text-xs text-slate-400">មតិយោបល់ពិតប្រាកដពីអតិថិជនដែលបានប្រើប្រាស់ផលិតផលនេះ</p>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <span class="text-3xl font-extrabold text-slate-900">{{ number_format($avgRating, 1) }}</span>
                     <div>
-                        <h3 class="text-lg font-bold mb-4">ការវាយតម្លៃសរុប ({{ $product->reviews->count() }})</h3>
-            
-                        @if($product->reviews->count() > 0)
-                            <div class="space-y-6 max-h-[500px] overflow-y-auto pr-2">
-                                @foreach($product->reviews()->latest()->get() as $review)
-                                    <div class="border-b border-gray-100 pb-4">
-                                        <div class="flex justify-between items-center mb-2">
-                                            <div class="font-bold text-gray-800 flex items-center gap-2">
-                                                <div
-                                                    class="w-8 h-8 bg-gray-200 rounded-full flex items-center justify-center text-gray-600">
-                                                    <i class="fa-solid fa-user"></i>
-                                                </div>
-                                                {{ $review->name }}
-                                            </div>
-                                            <div class="text-xs text-gray-400">{{ $review->created_at->diffForHumans() }}</div>
-                                        </div>
-                                        <!-- បង្ហាញផ្កាយតាមចំនួនពិន្ទុដែលគាត់បានឲ្យ -->
-                                        <div class="text-yellow-400 text-sm mb-2 ml-10">
+                        <div class="flex items-center gap-0.5 text-amber-400 text-xs">
+                            @for($i = 1; $i <= 5; $i++)
+                                <i class="fa-solid fa-star {{ $i <= round($avgRating) ? 'text-amber-400' : 'text-slate-200' }}"></i>
+                            @endfor
+                        </div>
+                        <p class="text-[10px] text-slate-400">ពិន្ទុសរុបជាមធ្យម</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Form to Submit Review -->
+            <div class="p-6 bg-slate-50 rounded-2xl border border-slate-100">
+                <h4 class="font-bold text-sm text-slate-900 mb-3 flex items-center gap-2">
+                    <i class="fa-solid fa-pen text-blue-600 text-xs"></i>
+                    <span>សរសេរការវាយតម្លៃរបស់អ្នក</span>
+                </h4>
+
+                <form action="{{ route('reviews.store', $product) }}" method="POST" class="space-y-4" x-data="{ ratingVal: 5 }">
+                    @csrf
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ឈ្មោះរបស់អ្នក *</label>
+                            <input type="text" name="name" required value="{{ auth()->user()?->name ?? old('name') }}"
+                                   placeholder="ឧ. សុខ ដារ៉ា"
+                                   class="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">ផ្តល់ពិន្ទុផ្កាយ *</label>
+                            <div class="flex items-center gap-2 pt-1">
+                                <input type="hidden" name="rating" :value="ratingVal">
+                                <template x-for="star in [1, 2, 3, 4, 5]" :key="star">
+                                    <button type="button" @click="ratingVal = star"
+                                            class="text-lg transition"
+                                            :class="star <= ratingVal ? 'text-amber-400 scale-110' : 'text-slate-300'">
+                                        <i class="fa-solid fa-star"></i>
+                                    </button>
+                                </template>
+                                <span class="text-xs text-slate-500 font-bold ml-2" x-text="ratingVal + ' / 5 ផ្កាយ'"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">មតិយោបល់ ឬចំណាប់អារម្មណ៍</label>
+                        <textarea name="comment" rows="3" placeholder="ចែករំលែកបទពិសោធន៍ប្រើប្រាស់របស់អ្នកចំពោះកុំព្យូទ័រនេះ..."
+                                  class="w-full px-3.5 py-2 bg-white border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                    </div>
+
+                    <button type="submit"
+                            class="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition shadow-sm flex items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i> ផ្ញើការវាយតម្លៃ
+                    </button>
+                </form>
+            </div>
+
+            <!-- Existing Reviews List -->
+            @if($product->reviews->count() > 0)
+                <div class="space-y-4 divide-y divide-slate-100">
+                    @foreach($product->reviews as $rev)
+                        <div class="pt-4 space-y-1.5">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2">
+                                    <div class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center">
+                                        {{ substr($rev->name, 0, 1) }}
+                                    </div>
+                                    <div>
+                                        <p class="text-xs font-bold text-slate-900">{{ $rev->name }}</p>
+                                        <div class="flex items-center gap-0.5 text-amber-400 text-[10px]">
                                             @for($i = 1; $i <= 5; $i++)
-                                                @if($i <= $review->rating)
-                                                    <i class="fa-solid fa-star"></i>
-                                                @else
-                                                    <i class="fa-solid fa-star text-gray-300"></i>
-                                                @endif
+                                                <i class="fa-solid fa-star {{ $i <= $rev->rating ? 'text-amber-400' : 'text-slate-200' }}"></i>
                                             @endfor
                                         </div>
-                                        <p class="text-gray-600 text-sm ml-10">{{ $review->comment }}</p>
                                     </div>
-                                @endforeach
+                                </div>
+                                <span class="text-[10px] text-slate-400">{{ $rev->created_at->diffForHumans() }}</span>
                             </div>
-                        @else
-                            <div class="bg-gray-50 border border-dashed border-gray-300 rounded p-8 text-center">
-                                <div class="text-4xl text-gray-300 mb-2"><i class="fa-regular fa-comment-dots"></i></div>
-                                <p class="text-gray-500 text-sm">
-                                    មិនទាន់មានការវាយតម្លៃនៅឡើយទេ។<br>ក្លាយជាអ្នកដំបូងដែលវាយតម្លៃកុំព្យូទ័រនេះ!</p>
+                            @if($rev->comment)
+                                <p class="text-xs text-slate-600 pl-10">{{ $rev->comment }}</p>
+                            @endif
+                        </div>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+
+        <!-- 5. Related Products Grid -->
+        @if($relatedProducts->count() > 0)
+            <div class="mt-12 space-y-6">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-xl font-bold text-slate-900 flex items-center gap-2">
+                        <i class="fa-solid fa-layer-group text-blue-600"></i>
+                        <span>ផលិតផលស្រដៀងគ្នា (Related Products)</span>
+                    </h3>
+                    <a href="{{ route('shop.index', ['category_id' => $product->category_id]) }}" class="text-xs font-bold text-blue-600 hover:underline">
+                        មើលបន្ថែម <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    @foreach($relatedProducts as $rel)
+                        <div class="bg-white rounded-3xl border border-slate-200/80 hover:border-blue-400 overflow-hidden shadow-sm hover:shadow-lg transition flex flex-col justify-between group">
+                            <div class="h-48 bg-slate-50 p-4 flex items-center justify-center overflow-hidden">
+                                @if($rel->image)
+                                    <img src="{{ asset($rel->image) }}" alt="{{ $rel->name }}" class="max-h-full max-w-full object-contain group-hover:scale-105 transition">
+                                @else
+                                    <i class="fa-solid fa-laptop text-3xl text-slate-300"></i>
+                                @endif
                             </div>
-                        @endif
-                    </div>
-            
+                            <div class="p-4 space-y-2">
+                                <span class="text-[10px] font-bold text-blue-600 bg-blue-50 px-2 py-0.5 rounded">{{ $rel->brand->name ?? 'Computer' }}</span>
+                                <h4 class="text-xs font-bold text-slate-800 truncate">
+                                    <a href="{{ route('shop.show', $rel) }}" class="hover:text-blue-600 transition">{{ $rel->name }}</a>
+                                </h4>
+                                <p class="text-base font-extrabold text-red-600">${{ number_format($rel->price, 2) }}</p>
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
             </div>
-            </div>
+        @endif
 
-            <!-- Additional Details (Accordion ទម្លាក់ចុះ) -->
-            <div class="border-t border-gray-200">
-                <details class="group">
-                    <summary
-                        class="flex justify-between items-center font-bold text-gray-900 cursor-pointer list-none py-4 outline-none hover:text-blue-600 transition">
-                        Additional details
-                        <span class="transition group-open:rotate-180"><i
-                                class="fa-solid fa-chevron-down text-sm"></i></span>
-                    </summary>
-                    {{-- <div class="text-gray-600 text-sm pb-4 px-2">
-                        - ទម្ងន់ (Weight): 1.63 kg (3.59 lbs)<br>
-                        - ពណ៌ (Color): Black / Silver / Grey<br>
-                        - Camera: HD 720p with Privacy Shutter<br>
-                        - Keyboard: Backlit, English
-                    </div> --}}
-                </details>
-            </div>
-            <div class="border-t border-gray-200 mb-12"></div>
-
-           
-            <!-- Related Products Grid -->
-            <div>
-                <h3 class="font-bold text-gray-900 mb-6 text-lg">Related products</h3>
-            
-                @if($relatedProducts->count() > 0)
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-
-                        
-                        @foreach($relatedProducts as $related)
-                            <a href="{{ route('shop.show', $related->id) }}"
-                                class="bg-white p-4 rounded hover:shadow-lg transition border border-gray-100 cursor-pointer group block">
-
-                                <!-- រូបភាពកុំព្យូទ័រ -->
-                                <div class="h-32 bg-white flex items-center justify-center mb-4 overflow-hidden">
-                                    @if($related->image)
-                                        <img src="{{ asset($related->image) }}" alt="{{ $related->name }}"
-                                            class="max-h-full max-w-full object-contain group-hover:scale-110 transition duration-300">
-                                    @else
-                                        <i class="fa-solid fa-laptop text-gray-300 text-5xl group-hover:scale-110 transition duration-300"></i>
-                                    @endif
-                                </div>
-
-                                <!-- លេខកូដ និងឈ្មោះ -->
-                                <div class="text-[11px] text-gray-500 mb-1">HC-00{{ $related->id }}</div>
-                                <h4 class="text-xs font-semibold text-gray-800 line-clamp-2 mb-2 leading-snug group-hover:text-blue-600">
-                                    {{ $related->name }}
-                                </h4>
-
-                                <!-- ផ្កាយ (ទុកជាគំរូសិន ព្រោះត្រូវគណនា Review ដូចខាងលើ) -->
-                                <div class="flex justify-between items-center mb-1">
-                                    <div class="text-yellow-400 text-[10px]">
-                                        <i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i>
-                                    </div>
-                                </div>
-
-                                <!-- តម្លៃ -->
-                                <div class="font-bold text-gray-900 text-sm">${{ number_format($related->price, 2) }}</div>
-                            </a>
-                        @endforeach
-
-                    </div>
-                @else
-                    <!-- ប្រសិនបើគ្មានផលិតផលពាក់ព័ន្ធទេ -->
-                    <div class="text-gray-500 text-sm italic border border-dashed border-gray-300 rounded p-4 text-center">
-                        មិនមានផលិតផលផ្សេងទៀតនៅក្នុងប្រភេទនេះទេ។
-                    </div>
-                @endif
-            </div>
-
-        </div>
     </div>
-</div>
 
-
-<!-- កូដ JavaScript សម្រាប់គណនាចំនួន និងតម្លៃ -->
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // ចាប់យក Element តាមរយៈ ID ដែលយើងបានដាក់អម្បាញ់មិញ
-        const btnMinus = document.getElementById('btn-minus');
-        const btnPlus = document.getElementById('btn-plus');
-        const qtyInput = document.getElementById('quantity-input');
-        const totalPriceEl = document.getElementById('total-price');
-
-        // ទាញយកតម្លៃដើមរបស់កុំព្យូទ័រ (Unit Price)
-        const unitPrice = parseFloat(document.getElementById('unit-price').getAttribute('data-price'));
-
-        // អនុគមន៍សម្រាប់គណនា និងបង្ហាញតម្លៃសរុប
-        function updateTotalPrice(qty) {
-            const total = unitPrice * qty;
-            // Format លេខឱ្យមានក្បៀស និងកន្ទុយទសភាគពីរខ្ទង់
-            totalPriceEl.innerText = '$' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-        }
-
-        // ពេលចុចប៊ូតុងបូក (+)
-        btnPlus.addEventListener('click', function () {
-            let currentQty = parseInt(qtyInput.value);
-            currentQty++; // បូកមួយ
-            qtyInput.value = currentQty; // បង្ហាញលេខថ្មីក្នុងប្រអប់
-            updateTotalPrice(currentQty); // គណនាតម្លៃថ្មី
-        });
-
-        // ពេលចុចប៊ូតុងដក (-)
-        btnMinus.addEventListener('click', function () {
-            let currentQty = parseInt(qtyInput.value);
-            if (currentQty > 1) { // ការពារកុំឱ្យដកទៅដល់លេខសូន្យ ឬអវិជ្ជមាន
-                currentQty--; // ដកមួយ
-                qtyInput.value = currentQty;
-                updateTotalPrice(currentQty);
-            }
-        });
-    });
-</script>
-
-
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const btnDesc = document.getElementById('btn-tab-desc');
-        const btnRev = document.getElementById('btn-tab-reviews');
-        const contentDesc = document.getElementById('content-desc');
-        const contentRev = document.getElementById('content-reviews');
-
-       
-        btnDesc.addEventListener('click', function () {
-            // ដូរពណ៌បន្ទាត់ និងអក្សរ
-            btnDesc.classList.add('border-gray-900', 'text-gray-900');
-            btnDesc.classList.remove('border-transparent', 'text-gray-500');
-            btnRev.classList.remove('border-gray-900', 'text-gray-900');
-            btnRev.classList.add('border-transparent', 'text-gray-500');
-            // បង្ហាញ ឬ លាក់អត្ថបទ
-            contentDesc.classList.remove('hidden');
-            contentRev.classList.add('hidden');
-        });
-
-        // ពេលចុចលើ Tab Reviews
-        btnRev.addEventListener('click', function () {
-            btnRev.classList.add('border-gray-900', 'text-gray-900');
-            btnRev.classList.remove('border-transparent', 'text-gray-500');
-            btnDesc.classList.remove('border-gray-900', 'text-gray-900');
-            btnDesc.classList.add('border-transparent', 'text-gray-500');
-            contentRev.classList.remove('hidden');
-            contentDesc.classList.add('hidden');
-        });
-    });
-
-
-    window.addEventListener('scroll', () => {
-            const navbar = document.getElementById('main-nav');
-            if (navbar) {
-                if (window.scrollY > 20) {
-                    navbar.classList.add('shadow-md');
-                } else {
-                    navbar.classList.remove('shadow-md');
-                }
-            }
-        });
-    
-</script>
-@include('layouts.footer')
-</body>
-
-</html>
+</x-storefront-layout>

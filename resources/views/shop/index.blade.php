@@ -1,359 +1,503 @@
-<!DOCTYPE html>
-<html lang="km">
+<x-storefront-layout title="HONG COMPUTER">
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>HONG Computer</title>
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.min.js"></script>
-</head>
+    <!-- 1. HERO SECTION & PROMOTIONAL BANNERS -->
+    @if(!request()->anyFilled(['category_id', 'brand_id', 'search', 'min_price', 'max_price', 'in_stock']))
+        <div class="bg-gradient-to-r  from-slate-900 via-blue-950 to-slate-900 text-white py-12 px-4 relative overflow-hidden">
+            <!-- Ambient decorative shapes -->
+            <div class="absolute -top-24 -right-24 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-<body class="bg-gray-100 font-sans antialiased">
+            <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
 
-    <!-- Navbar ខាងលើ -->
-    <nav class=sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm border-b border-gray-200 mb-8 transition-all duration-300>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex justify-between items-center">
-            <a href="{{ route('shop.index') }}" class="text-xl font-bold text-blue-600"><i class="fa-solid fa-laptop text-amber-400 text-[30px] me-4"></i> HONG COMPUTER</a>
-        <div>
-            @auth
-                <a href="{{ route('admin.dashboard') }}"
-                    class="text-sm bg-blue-600 text-white px-4 py-2 rounded shadow hover:bg-blue-700 ">
-                    ទៅកាន់ Admin Dashboard
-                </a>
-            @else
-                <a href="{{ route('login') }}"
-                    class="inline-block text-sm bg-blue-800 text-white px-4 py-2 rounded transition duration-200 ease-in-out hover:-translate-y-0.5 hover:scale-105 hover:bg-blue-700">
-                    ចូលគណនី (Login)
-                </a>
-
-                <a href="{{ route('register') }}"
-                    class="inline-block ml-3 text-sm bg-red-600 text-white px-4 py-2 rounded transition duration-200 ease-in-out hover:-translate-y-0.5 hover:scale-105 hover:bg-red-500">
-                    ចុះឈ្មោះ
-                </a>
-            @endauth
-        </div>
-        </div>
-    </nav>
-
-
-    
-    <div id="indicators-carousel" class="relative w-full" data-carousel="static">
-        <!-- Carousel wrapper -->
-        <div class="relative h-56 overflow-hidden rounded-base md:h-[70vh]">
-            <!-- Item 1 -->
-            <div class="hidden duration-700 ease-in-out" data-carousel-item="active">
-                <img src="https://www.asus.com/campaign/powered-by-asus/upload/scenario/20231123114432_pic0.jpg"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
-            <!-- Item 2 -->
-            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <img src="https://press.asus.com/assets/w_5472,h_3648/30a70a9d-d394-417a-a503-aad2248010d9/1.%20ROG%20Event%20Product%20Lineup.jpg"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
-            <!-- Item 3 -->
-            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <img src="/docs/images/carousel/carousel-3.svg"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
-            <!-- Item 4 -->
-            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <img src="/docs/images/carousel/carousel-4.svg"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
-            <!-- Item 5 -->
-            <div class="hidden duration-700 ease-in-out" data-carousel-item>
-                <img src="/docs/images/carousel/carousel-5.svg"
-                    class="absolute block w-full -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" alt="...">
-            </div>
-        </div>
-        <!-- Slider indicators -->
-        <div class="absolute z-30 flex -translate-x-1/2 space-x-3 rtl:space-x-reverse bottom-5 left-1/2">
-            <button type="button" class="w-3 h-3 rounded-base" aria-current="true" aria-label="Slide 1"
-                data-carousel-slide-to="0"></button>
-            <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 2"
-                data-carousel-slide-to="1"></button>
-            <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 3"
-                data-carousel-slide-to="2"></button>
-            <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 4"
-                data-carousel-slide-to="3"></button>
-            <button type="button" class="w-3 h-3 rounded-base" aria-current="false" aria-label="Slide 5"
-                data-carousel-slide-to="4"></button>
-        </div>
-        <!-- Slider controls -->
-        <button type="button"
-            class="absolute top-0 start-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-            data-carousel-prev>
-            <span
-                class="inline-flex items-center justify-center w-10 h-10 rounded-base bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                <svg class="w-5 h-5 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m15 19-7-7 7-7" />
-                </svg>
-                <span class="sr-only">Previous</span>
-            </span>
-        </button>
-        <button type="button"
-            class="absolute top-0 end-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-            data-carousel-next>
-            <span
-                class="inline-flex items-center justify-center w-10 h-10 rounded-base bg-white/30 dark:bg-gray-800/30 group-hover:bg-white/50 dark:group-hover:bg-gray-800/60 group-focus:ring-4 group-focus:ring-white dark:group-focus:ring-gray-800/70 group-focus:outline-none">
-                <svg class="w-5 h-5 text-white rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
-                    width="24" height="24" fill="none" viewBox="0 0 24 24">
-                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="m9 5 7 7-7 7" />
-                </svg>
-                <span class="sr-only">Next</span>
-            </span>
-        </button>
-    </div>
-
-
-    <!-- Main Content -->
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col md:flex-row gap-8">
-
-        <!-- Sidebar Filter តាម Category -->
-    <div class="w-full md:w-1/4">
-        <div class="bg-white rounded-xl shadow-sm border border-gray-100 relative z-30 font-['Kantumruy_Pro']">
-           
-            <!-- Header-->
-            <div class="bg-gray-900 text-white flex items-center justify-between px-4 py-3.5">
-                <div class="flex items-center gap-2.5">
-                    <span class="flex items-center justify-center size-10 rounded-full bg-amber-500 text-gray-950 text-sm">
-                        <i class="fa-solid fa-layer-group text-[20px]" style="color: rgb(255, 255, 255 );"></i>
-                    </span>
-                    <h3 class="font-bold text-sm tracking-wide uppercase">Categories</h3>
-                </div>
-                
-            </div>
-    
-          
-            <!-- Category Sidebar Navigation -->
-            <div class="p-2 space-y-1.5 bg-slate-50/70 rounded-2xl border border-slate-200/60 shadow-xs relative">
-            
-                <!-- ១. ទំនិញទាំងអស់ (All Products) -->
-                @php $isAllActive = !request('category_id'); @endphp
-                <a href="{{ route('shop.index') }}"
-                    class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ $isAllActive ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-slate-600 hover:bg-white hover:text-blue-600 hover:shadow-sm' }}">
-                    <div class="flex items-center gap-3">
-                        <div
-                            class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors {{ $isAllActive ? 'bg-white/20 text-white' : 'bg-slate-200/60 text-slate-500 group-hover:bg-blue-50 group-hover:text-blue-600' }}">
-                            <i class="fa-solid fa-border-all text-xs"></i>
-                        </div>
-                        <span>ទំនិញទាំងអស់</span>
+                <!-- Left Hero Text -->
+                <div class="lg:col-span-7 space-y-5">
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold">
+                        <i class="fa-solid fa-bolt text-amber-400"></i> រដូវកាលលក់បញ្ចុះតម្លៃពិសេស
                     </div>
-                    <i
-                        class="fa-solid fa-chevron-right text-[10px] transition-transform duration-200 group-hover:translate-x-0.5 {{ $isAllActive ? 'text-white' : 'text-slate-400 opacity-0 group-hover:opacity-100' }}"></i>
-                </a>
-            
-                <div class="my-1 border-t border-slate-200/60"></div>
-            
-                <!-- ២. រង្វិលជុំ Category + Hover Flyout Brands Menu -->
-                @foreach($categories as $category)
-                    @php $isActive = request('category_id') == $category->id; @endphp
+                    <h1 class="text-3xl sm:text-5xl font-extrabold tracking-tight leading-tight">
+                        ស្វែងរកកុំព្យូទ័រក្នុងក្តីស្រមៃ <br><br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-sky-300 to-amber-300">
+                            កម្លាំងខ្លាំង តម្លៃសមរម្យ
+                        </span>
+                    </h1>
+                    <p class="text-sm sm:text-base text-slate-300 max-w-xl font-normal leading-relaxed">
+                        មានស្តុក Laptop, Gaming, Ultrabook និងគ្រឿងបន្លាស់កុំព្យូទ័រម៉ាកល្បីៗជាច្រើន <span>ជាមួយការធានាផ្លូវការ និងសេវាដឹកជញ្ជូនរហ័សដល់ផ្ទះ។</span>
+                    </p>
 
-                    <!-- Parent Item (ត្រូវបន្ថែម relative និង group/item) -->
-                    <div class="relative group/item">
-                        <a href="{{ route('shop.index', ['category_id' => $category->id]) }}"
-                            class="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 {{ $isActive ? 'bg-blue-600 text-white shadow-md shadow-blue-500/20' : 'text-slate-600 hover:bg-white hover:text-blue-600 hover:shadow-sm' }}">
-
-                            <div class="flex items-center gap-3">
-                                <div
-                                    class="w-7 h-7 rounded-lg flex items-center justify-center transition-colors {{ $isActive ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500 group-hover/item:bg-blue-50 group-hover/item:text-blue-600' }}">
-                                    <i class="{{ $category->icon ?? 'fa-solid fa-laptop' }} text-xs"></i>
-                                </div>
-                                <span>{{ $category->name }}</span>
-                            </div>
-
-                            <div class="flex items-center gap-2">
-                                @if(isset($category->products_count))
-                                    <span
-                                        class="text-[11px] font-semibold px-2 py-0.5 rounded-full transition-colors {{ $isActive ? 'bg-white/20 text-white' : 'bg-slate-200/70 text-slate-600 group-hover/item:bg-blue-100 group-hover/item:text-blue-700' }}">
-                                        {{ $category->products_count }}
-                                    </span>
-                                @endif
-                                <i
-                                    class="fa-solid fa-chevron-right text-[10px] transition-transform duration-200 group-hover/item:translate-x-0.5 {{ $isActive ? 'text-white' : 'text-slate-400 opacity-0 group-hover/item:opacity-100' }}"></i>
-                            </div>
+                    <!-- Action CTA & Active Coupons Ticker -->
+                    <div class="flex flex-wrap items-center gap-4 pt-2">
+                        <a href="#catalog" class="px-6 py-3 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl shadow-lg shadow-blue-500/30 transition transform hover:-translate-y-0.5 flex items-center gap-2 text-sm">
+                            <i class="fa-solid fa-basket-shopping"></i> ទិញទំនិញឥឡូវនេះ
                         </a>
+                        <a href="{{ route('order.track') }}" class="px-6 py-3 bg-slate-800/80 hover:bg-slate-700 text-slate-200 font-semibold rounded-2xl border border-slate-700 transition text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-route text-amber-400"></i> តាមដានការបញ្ជាទិញ
+                        </a>
+                    </div>
 
-                        <!-- 3. Desktop Hover Submenu (Brand Flyout Card) -->
+                    <!-- Active Promo Coupons Badge Strip -->
+                    @if($activeCoupons->count() > 0)
+                        <div class="pt-4 flex items-center gap-3 flex-wrap">
+                            <span class="text-xs text-slate-400 font-medium">គូប៉ុងពិសេសថ្ងៃនេះ៖</span>
+                            @foreach($activeCoupons as $c)
+                                <div class="inline-flex items-center gap-2 px-3 py-1 bg-amber-400/10 border border-amber-400/30 rounded-xl text-amber-300 text-xs font-mono font-bold">
+                                    <i class="fa-solid fa-tag text-[10px]"></i>
+                                    <span>{{ $c->code }}</span>
+                                    <span class="text-[10px] text-amber-200/80 font-sans">
+                                        ({{ ($c->type === 'percentage' || $c->type === 'percent') ? $c->value . '%' : '$' . $c->value }} OFF)
+                                    </span>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Right Hero Image Showcase -->
+                <div class="lg:col-span-5 relative h-full w-full lg:mt-0">
+                    <!-- លុប max-w-lg និង flex ធ្វើឱ្យកណ្តាលចេញ ដើម្បីឱ្យវាលាតពេញ -->
+                    <div class="relative h-full w-full animate-hero-float">
+
+                        <!-- Soft Ambient Glow behind image -->
                         <div
-                            class="hidden lg:block invisible opacity-0 translate-x-2 group-hover/item:visible group-hover/item:opacity-100 group-hover/item:translate-x-0 transition-all duration-200 ease-out absolute left-full top-0 ml-2 w-56 bg-white border border-slate-200/80 rounded-2xl shadow-xl p-2 z-50">
-                            <div
-                                class="px-3 py-1.5 text-[11px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-100 mb-1 flex items-center gap-1.5">
-                                <i class="fa-solid fa-tags text-[10px]"></i>
-                                <span>ម៉ាកយីហោ (Brands)</span>
-                            </div>
-
-                            <div class="space-y-0.5">
-                                {{-- ឧទាហរណ៍៖ ទាញ Brands ចេញពី Relationship $category->brands --}}
-                                @forelse($category->brands ?? [] as $brand)
-                                    <a href="{{ route('shop.index', ['category_id' => $category->id, 'brand_id' => $brand->id]) }}"
-                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
-                                        <span>{{ $brand->name }}</span>
-                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
-                                    </a>
-                                @empty
-                                    {{-- ករណីគ្មាន Brand ក្នុង DB (Static Sample) --}}
-                                    <a href="#"
-                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
-                                        <span>ASUS</span>
-                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
-                                    </a>
-                                    <a href="#"
-                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
-                                        <span>Dell</span>
-                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
-                                    </a>
-                                    <a href="#"
-                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
-                                        <span>MSI</span>
-                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
-                                    </a>
-                                    <a href="#"
-                                        class="flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium text-slate-600 hover:bg-slate-50 hover:text-blue-600 transition-colors">
-                                        <span>Apple (MacBook)</span>
-                                        <i class="fa-solid fa-angle-right text-[10px] text-slate-300"></i>
-                                    </a>
-                                @endforelse
-                            </div>
+                            class="absolute inset-0 bg-gradient-to-r from-blue-600/40 via-sky-400/20 rounded-full blur-3xl pointer-events-none">
                         </div>
 
+                        <!-- Image Container -->
+                        <div class="relative h-full w-full overflow-hidden rounded-r-lg">
+                            <img src="{{ asset('uploads/products/Strix_G18_KV_16x9_p-2000-removebg-preview.png') }}" alt="ROG 2026"
+                                class="relative w-full h-full object-cover drop-shadow-2xl hover:scale-105 transition-transform duration-500 cursor-pointer">
+                        </div>
                     </div>
-                @endforeach
+                </div>
             </div>
         </div>
-    </div>
+    @endif
 
-        <!-- Product Grid List -->
-        <div class="w-full md:w-3/4">
-            <form action="{{ route('shop.index') }}" method="GET" class="mb-6 flex gap-2">
-                <!-- រក្សាទុក Category ចាស់ប្រសិនបើមានការជ្រើសរើស -->
-                @if(request('category_id'))
-                    <input type="hidden" name="category_id" value="{{ request('category_id') }}">
-                @endif
-            
-                <input type="text" name="search" value="{{ request('search') }}" placeholder="ស្វែងរកម៉ូដែលកុំព្យូទ័រ..."
-                    class="w-full border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 p-2.5">
-            
-                <button type="submit"
-                    class="bg-blue-600 text-white px-6 py-2.5 rounded-lg shadow hover:bg-blue-700 transition flex items-center gap-2 font-bold">
-                    <i class="fa-solid fa-magnifying-glass"></i> ស្វែងរក
-                </button>
-            </form>
-            @if($products->count() > 0)
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($products as $product)
-                        <div
-                            class=" bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden hover:shadow-md transition">
-                           
-                        <!-- រូបភាពទំនិញ  -->
-                        <div class="h-56 bg-white overflow-hidden flex items-center justify-center p-3 border-b border-gray-100">
-                            @if($product->image)
-                                <img src="{{ asset($product->image) }}" alt="{{ $product->name }}" class="max-h-full max-w-full object-contain">
-                            @else
-                                <div class="flex items-center justify-center h-full text-gray-400">គ្មានរូបភាព</div>
+    <!-- 2. BRAND SHOWCASE TICKER -->
+    {{-- @if($brands->count() > 0)
+        <div class="bg-white border-b border-slate-200 py-4 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center gap-6 overflow-x-auto no-scrollbar py-1">
+                    <span class="text-xs font-bold text-slate-400 uppercase tracking-wider shrink-0 flex items-center gap-1.5">
+                        <i class="fa-solid fa-award text-blue-600"></i> ម៉ាកយីហោ៖
+                    </span>
+                    <a href="{{ route('shop.index') }}"
+                       class="shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition {{ !request('brand_id') ? 'bg-slate-900 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200' }}">
+                        ទាំងអស់
+                    </a>
+                    @foreach($brands as $b)
+                        <a href="{{ route('shop.index', array_merge(request()->query(), ['brand_id' => $b->id])) }}"
+                           class="shrink-0 px-3.5 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-2 {{ request('brand_id') == $b->id ? 'bg-blue-600 text-white shadow-sm' : 'bg-slate-100 text-slate-700 hover:bg-slate-200' }}">
+                            @if($b->logo)
+                                <img src="{{ asset($b->logo) }}" alt="{{ $b->name }}" class="w-4 h-4 object-contain">
                             @endif
-                        </div>
-
-                            <!-- ព័ត៌មានលម្អិត -->
-                            <div class="p-4">
-                                <span
-                                    class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded font-semibold">{{ $product->category->name ?? 'ផ្សេងៗ' }}</span>
-                                <h3 class="font-bold text-lg text-gray-800 mt-2 truncate">{{ $product->name }}</h3>
-
-                                <div class="text-sm text-gray-600 mt-1 space-y-1">
-                                    @if($product->cpu)
-                                    <div>CPU: {{ $product->cpu }}</div> @endif
-                                    @if($product->ram)
-                                    <div>RAM: {{ $product->ram }}</div> @endif
-                                    @if($product->storage)
-                                    <div>Storage: {{ $product->storage }}</div> @endif
-                                </div>
-
-                                <div class="mt-4 flex justify-between items-center">
-                                    <span class="text-xl font-bold text-red-600">${{ number_format($product->price, 2) }}</span>
-                                    <a href="{{ route('shop.show', $product->id) }}"
-                                        class="bg-gray-900 text-white px-3 py-1.5 rounded text-sm hover:bg-blue-600 transition">
-                                        លម្អិត
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
+                            <span>{{ $b->name }}</span>
+                            <span class="text-[10px] opacity-70">({{ $b->products_count }})</span>
+                        </a>
                     @endforeach
                 </div>
-            @else
-                <div class="bg-white p-8 text-center rounded-lg shadow-sm text-gray-500">
-                    មិនមានទំនិញដាក់បង្ហាញនៅឡើយទេក្នុងប្រភេទនេះ។
-                </div>
-            @endif
+            </div>
         </div>
+    @endif --}}
 
+    <!-- 3. MAIN CATALOG CONTAINER -->
+    <div id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+        <div class="flex flex-col lg:flex-row gap-8">
+
+            <!-- A. FILTER SIDEBAR (Desktop & Mobile) -->
+            <aside class="w-full lg:w-72 shrink-0 space-y-6">
+
+                <!-- Filter Card -->
+                <div class="bg-white rounded-3xl border border-slate-200/80 shadow-sm p-5 space-y-6">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                        <h3 class="font-bold text-lg text-blue-800 flex items-center gap-2">
+                            <i class="fa-solid fa-sliders text-amber-600"></i>
+                            <span>ស្វែងរក (Filters)</span>
+                        </h3>
+                        @if(request()->anyFilled(['category_id', 'brand_id', 'search', 'min_price', 'max_price', 'in_stock']))
+                            <a href="{{ route('shop.index') }}" class="text-xs font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 bg-rose-50 px-2.5 py-1 rounded-lg transition" title="បង្ហាញទំនិញទាំងអស់">
+                                {{-- <i class="fa-solid fa-rotate-left text-[10px]"></i> បង្ហាញទាំងអស់ --}}
+                            </a>
+                        @endif
+                    </div>
+
+                    <form action="{{ route('shop.index') }}" method="GET" class="space-y-6" id="filterForm">
+                        @if(request('search'))
+                            <input type="hidden" name="search" value="{{ request('search') }}">
+                        @endif
+                        @if(request('sort'))
+                            <input type="hidden" name="sort" value="{{ request('sort') }}">
+                        @endif
+
+                        <!-- Filter 1: Categories -->
+                        <div>
+                            <div class="flex items-center justify-between mb-3">
+                                <label class="block text-[15px] font-bold text-slate-700 uppercase tracking-wider">
+                                    ប្រភេទកុំព្យូទ័រ
+                                </label>
+                                @if(request('category_id'))
+                                    <a href="{{ route('shop.index', request()->except(['category_id', 'page'])) }}"
+                                       class="text-xs font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 bg-rose-50 px-2 py-0.5 rounded-lg transition"
+                                       title="ដកប្រភេទចេញ">
+                                        <i class="fa-solid fa-xmark text-[10px]"></i> ដកចេញ
+                                    </a>
+                                @endif
+                            </div>
+                            <div class="space-y-1">
+                                <!-- ទាំងអស់ (All Categories) - ចុចទៅបង្ហាញកុំព្យូទ័រទាំងអស់មកវិញ -->
+                                <a href="{{ route('shop.index') }}"
+                                   class="flex items-center justify-between px-3 py-2 rounded-xl text-[14px] font-semibold transition {{ !request('category_id') && !request('brand_id') ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600 hover:bg-slate-50' }}">
+                                    <div class="flex items-center gap-2">
+                                        <i class="fa-solid fa-border-all text-[12px] text-blue-600"></i>
+                                        <span>ទាំងអស់ (All Categories)</span>
+                                    </div>
+                                    
+                                </a>
+                                @foreach($categories as $cat)
+                                    <a href="{{ request('category_id') == $cat->id ? route('shop.index', request()->except(['category_id', 'page'])) : route('shop.index', array_merge(request()->except('page'), ['category_id' => $cat->id])) }}"
+                                       class="flex items-center justify-between px-3 py-2 rounded-xl text-[14px] font-semibold transition {{ request('category_id') == $cat->id ? 'bg-blue-50 text-blue-700 font-bold' : 'text-slate-600 hover:bg-slate-50' }}">
+                                        <div class="flex items-center gap-2">
+                                            <i class="{{ $cat->icon ?? 'fa-solid fa-laptop' }} text-[11px] text-slate-400"></i>
+                                            <span>{{ $cat->name }}</span>
+                                        </div>
+                                        @if(request('category_id') == $cat->id)
+                                            <i class="fa-solid fa-circle-check text-xs text-blue-600"></i>
+                                        @endif
+                                    </a>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Filter 2: Brands -->
+                        @if($brands->count() > 0)
+                            <div class="pt-4 border-t border-slate-100">
+                                <div class="flex items-center justify-between mb-3">
+                                    <label class="block text-[15px] font-bold text-blue-800 uppercase tracking-wider">
+                                        ម៉ាកយីហោ (Brands)
+                                    </label>
+                                    @if(request('brand_id'))
+                                        <a href="{{ route('shop.index', request()->except(['brand_id', 'page'])) }}"
+                                           class="text-xs font-bold text-rose-600 hover:text-rose-700 flex items-center gap-1 bg-rose-50 px-2 py-0.5 rounded-lg transition"
+                                           title="ដកម៉ាកយីហោចេញ">
+                                            <i class="fa-solid fa-xmark text-[10px]"></i> ដកម៉ាកចេញ
+                                        </a>
+                                    @endif
+                                </div>
+                                <div class="space-y-1.5 max-h-52 overflow-y-auto pr-1">
+                                    <!-- ជម្រើស: ម៉ាកទាំងអស់ (All Brands) -->
+                                    <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer text-[14px]">
+                                        <div class="flex items-center gap-2">
+                                            <input type="radio" name="brand_id" value=""
+                                                   {{ !request('brand_id') ? 'checked' : '' }}
+                                                   onchange="this.form.submit()"
+                                                   class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer">
+                                            <span class="font-medium {{ !request('brand_id') ? 'text-blue-700 font-bold' : 'text-slate-700' }}">
+                                                ម៉ាកទាំងអស់ (All Brands)
+                                            </span>
+                                        </div>
+                                    </label>
+
+                                    <!-- បញ្ជីម៉ាកយីហោនីមួយៗ (អាចដកវិញបានពេលចុចម្ដងទៀត) -->
+                                    @foreach($brands as $br)
+                                        <label class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 cursor-pointer text-[14px]">
+                                            <div class="flex items-center gap-2">
+                                                <input type="radio" name="brand_id" value="{{ $br->id }}"
+                                                       {{ request('brand_id') == $br->id ? 'checked' : '' }}
+                                                       data-was-checked="{{ request('brand_id') == $br->id ? 'true' : 'false' }}"
+                                                       onclick="toggleBrandRadio(this)"
+                                                       class="w-4 h-4 text-blue-600 border-slate-300 focus:ring-blue-500 cursor-pointer">
+                                                <span class="font-medium {{ request('brand_id') == $br->id ? 'text-blue-700 font-bold' : 'text-slate-700' }}">
+                                                    {{ $br->name }}
+                                                </span>
+                                            </div>
+                                            @if($br->products_count > 0)
+                                                <span class="text-[12px] text-slate-400">({{ $br->products_count }})</span>
+                                            @endif
+                                        </label>
+                                    @endforeach
+                                </div>
+                            </div>
+                        @endif
+
+                        <!-- Filter 3: Price Range -->
+                        <div class="pt-4 border-t border-slate-100">
+                            <label class="block text-xs font-bold text-amber-600 uppercase tracking-wider mb-3">
+                                ចន្លោះតម្លៃ ($)
+                            </label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <div>
+                                    <input type="number" name="min_price" value="{{ request('min_price') }}" placeholder="Min $"
+                                           class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                                <div>
+                                    <input type="number" name="max_price" value="{{ request('max_price') }}" placeholder="Max $"
+                                           class="w-full px-3 py-2 border border-slate-200 rounded-xl text-xs outline-none focus:ring-2 focus:ring-blue-500">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Filter 4: Stock Toggle -->
+                        <div class="pt-4 border-t border-slate-100">
+                            <label class="flex items-center gap-2 cursor-pointer text-xs font-semibold text-slate-700">
+                                <input type="checkbox" name="in_stock" value="1" {{ request('in_stock') ? 'checked' : '' }}
+                                       onchange="this.form.submit()"
+                                       class="w-4 h-4 text-blue-600 border-slate-300 rounded focus:ring-blue-500">
+                                <span>បង្ហាញតែទំនិញមានក្នុងស្តុក (In Stock Only)</span>
+                            </label>
+                        </div>
+
+                        <button type="submit" class="w-full py-2.5 bg-gradient-to-br bg-blue-800 hover:bg-blue-900 text-white rounded-xl text-xs font-bold transition flex items-center justify-center gap-1.5 shadow-sm">
+                            <i class="fa-solid fa-filter"></i> អនុវត្តតម្រង (Apply)
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Support Banner -->
+                <div class="bg-gradient-to-br from-blue-600 to-indigo-700 text-white p-6 rounded-3xl shadow-md space-y-3">
+                    <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-headset text-amber-300"></i>
+                    </div>
+                    <h4 class="font-bold text-sm">ត្រូវការជំនួយក្នុងការជ្រើសរើស?</h4>
+                    <p class="text-xs text-blue-100 leading-relaxed">
+                        ក្រុមការងារបច្ចេកទេសរបស់យើងត្រៀមខ្លួនជួយលោកអ្នកក្នុងការជ្រើសរើសកុំព្យូទ័រដែលស័ក្តិសមបំផុត។
+                    </p>
+                    <a href="https://t.me/SENGHONG_SH" target="_blank"
+                       class="inline-block px-4 py-2 bg-white text-blue-700 text-xs font-bold rounded-xl hover:bg-blue-50 transition shadow-sm">
+                        <i class="fa-brands fa-telegram animate-bounce"></i> ជជែកតាម Telegram
+                    </a>
+                </div>
+
+            </aside>
+
+            <!-- B. MAIN PRODUCT CATALOG -->
+            <div class="flex-1 space-y-6">
+
+                <!-- Top Sort & Controls Bar -->
+                <div class="bg-white p-4 rounded-2xl border border-slate-200/80 shadow-sm space-y-3">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <p class="text-xs text-slate-500">
+                                បានរកឃើញ <span class="font-bold text-slate-900">{{ $products->total() }}</span> ផលិតផល
+                                @if(request('search')) សម្រាប់ពាក្យ "<span class="text-blue-600 font-bold">{{ request('search') }}</span>" @endif
+                            </p>
+                        </div>
+
+                        <!-- Sorting Dropdown -->
+                        <div class="flex items-center gap-2 text-xs w-full sm:w-auto justify-end">
+                            <span class="text-slate-400 shrink-0">តម្រៀបតាម៖</span>
+                            <form method="GET" action="{{ route('shop.index') }}" class="flex items-center">
+                                @foreach(request()->except('sort') as $k => $v)
+                                    <input type="hidden" name="{{ $k }}" value="{{ $v }}">
+                                @endforeach
+                                <select name="sort" onchange="this.form.submit()"
+                                        class="px-3 py-1.5 bg-green-700 border border-slate-200 rounded-xl text-xs font-semibold text-white outline-none focus:ring-2 focus:ring-blue-500 shadow-sm cursor-pointer">
+                                    <option value="latest" {{ $sort === 'latest' ? 'selected' : '' }}>ថ្មីបំផុត (Latest)</option>
+                                    <option value="price_asc" {{ $sort === 'price_asc' ? 'selected' : '' }}>តម្លៃទាប ទៅ ខ្ពស់</option>
+                                    <option value="price_desc" {{ $sort === 'price_desc' ? 'selected' : '' }}>តម្លៃខ្ពស់ ទៅ ទាប</option>
+                                    <option value="name_asc" {{ $sort === 'name_asc' ? 'selected' : '' }}>ឈ្មោះ (A - Z)</option>
+                                </select>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Active Filter Chips (ចុចដកតម្រងនីមួយៗ ឬលុបទាំងអស់) -->
+                    @if(request()->anyFilled(['category_id', 'brand_id', 'min_price', 'max_price', 'in_stock']))
+                        <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+                            <span class="text-xs text-slate-400 font-medium">តម្រងសកម្ម៖</span>
+                            @if(request('category_id') && $categories->firstWhere('id', request('category_id')))
+                                <a href="{{ route('shop.index', request()->except(['category_id', 'page'])) }}"
+                                   class="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-700 border border-blue-200 rounded-full text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition"
+                                   title="ចុចដើម្បីដកប្រភេទនេះ">
+                                    <span>ប្រភេទ៖ {{ $categories->firstWhere('id', request('category_id'))->name }}</span>
+                                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                                </a>
+                            @endif
+
+                            @if(request('brand_id') && $brands->firstWhere('id', request('brand_id')))
+                                <a href="{{ route('shop.index', request()->except(['brand_id', 'page'])) }}"
+                                   class="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-800 border border-amber-200 rounded-full text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition"
+                                   title="ចុចដើម្បីដកម៉ាកនេះ">
+                                    <span>ម៉ាក៖ {{ $brands->firstWhere('id', request('brand_id'))->name }}</span>
+                                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                                </a>
+                            @endif
+
+                            @if(request('min_price') || request('max_price'))
+                                <a href="{{ route('shop.index', request()->except(['min_price', 'max_price', 'page'])) }}"
+                                   class="inline-flex items-center gap-1.5 px-3 py-1 bg-slate-100 text-slate-700 border border-slate-200 rounded-full text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition"
+                                   title="ចុចដើម្បីដកចន្លោះតម្លៃ">
+                                    <span>តម្លៃ៖ ${{ request('min_price', 0) }} - ${{ request('max_price', 'Max') }}</span>
+                                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                                </a>
+                            @endif
+
+                            @if(request('in_stock'))
+                                <a href="{{ route('shop.index', request()->except(['in_stock', 'page'])) }}"
+                                   class="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-full text-xs font-semibold hover:bg-rose-50 hover:text-rose-600 hover:border-rose-200 transition">
+                                    <span>មានក្នុងស្តុក</span>
+                                    <i class="fa-solid fa-xmark text-[10px]"></i>
+                                </a>
+                            @endif
+
+                            <a href="{{ route('shop.index') }}"
+                               class="text-xs font-bold text-rose-600 hover:text-rose-700 hover:underline ml-1">
+                                បង្ហាញកុំព្យូទ័រទាំងអស់ឡើងវិញ
+                            </a>
+                        </div>
+                    @endif
+                </div>
+
+                <!-- Products Grid -->
+                @if($products->count() > 0)
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+                        @foreach($products as $product)
+                            <div class="bg-white rounded-3xl border border-slate-200/80 hover:border-blue-400 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col group">
+                                
+                                <!-- Product Image & Badges -->
+                                <div class="relative h-60 bg-slate-50 overflow-hidden flex items-center justify-center p-6 border-b border-slate-100 group-hover:bg-slate-100/50 transition">
+                                    @if($product->image)
+                                        <img src="{{ asset($product->image) }}" alt="{{ $product->name }}"
+                                             class="max-h-full max-w-full object-contain group-hover:scale-105 transition-transform duration-300">
+                                    @else
+                                        <div class="flex flex-col items-center justify-center text-slate-300 gap-2">
+                                            <i class="fa-solid fa-laptop text-4xl"></i>
+                                            <span class="text-xs">គ្មានរូបភាព</span>
+                                        </div>
+                                    @endif
+
+                                    <!-- Top Badges -->
+                                    <div class="absolute top-3 left-3 flex flex-col gap-1 items-start">
+                                        @if($product->brand)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-bold bg-slate-900/90 text-white backdrop-blur-sm shadow-sm">
+                                                {{ $product->brand->name }}
+                                            </span>
+                                        @endif
+                                        <span class="inline-flex items-center px-2 py-0.5 rounded-lg text-[10px] font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                            {{ $product->category->name ?? 'កុំព្យូទ័រ' }}
+                                        </span>
+                                    </div>
+
+                                    <!-- Stock Status Badge -->
+                                    <div class="absolute top-3 right-3">
+                                        @if($product->stock > 5)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                                                មានស្តុក
+                                            </span>
+                                        @elseif($product->stock > 0)
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800">
+                                                នៅសល់ {{ $product->stock }} គ្រឿង
+                                            </span>
+                                        @else
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-800">
+                                                អស់ស្តុក
+                                            </span>
+                                        @endif
+                                    </div>
+                                </div>
+
+                                <!-- Product Info Body -->
+                                <div class="p-5 flex-1 flex flex-col justify-between space-y-4">
+                                    <div class="space-y-2">
+                                        <!-- Rating -->
+                                        @php $rating = $product->reviews->avg('rating') ?? 5; @endphp
+                                        <div class="flex items-center gap-1 text-amber-400 text-xs">
+                                            @for($i = 1; $i <= 5; $i++)
+                                                <i class="fa-solid fa-star text-[10px] {{ $i <= round($rating) ? 'text-amber-400' : 'text-slate-200' }}"></i>
+                                            @endfor
+                                            <span class="text-slate-400 text-[10px] ml-1">({{ $product->reviews->count() }})</span>
+                                        </div>
+
+                                        <!-- Title -->
+                                        <h3 class="font-bold text-sm text-slate-800 line-clamp-2 hover:text-blue-600 transition leading-snug">
+                                            <a href="{{ route('shop.show', $product) }}">
+                                                {{ $product->name }}
+                                            </a>
+                                        </h3>
+
+                                        <!-- Specs Tags -->
+                                        <div class="flex flex-wrap gap-1 text-[11px] text-slate-500 pt-1">
+                                            @if($product->cpu)
+                                                <span class="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-mono"><i class="fa-solid fa-microchip text-[9px] text-slate-400"></i> {{ $product->cpu }}</span>
+                                            @endif
+                                            @if($product->ram)
+                                                <span class="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-mono"><i class="fa-solid fa-memory text-[9px] text-slate-400"></i> {{ $product->ram }}</span>
+                                            @endif
+                                            @if($product->storage)
+                                                <span class="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-mono"><i class="fa-solid fa-hard-drive text-[9px] text-slate-400"></i> {{ $product->storage }}</span>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                    <!-- Price & Add To Cart Button -->
+                                    <div class="pt-4 border-t border-slate-100 flex items-center justify-between gap-3">
+                                        <div>
+                                            <p class="text-[10px] text-slate-400">តម្លៃពិសេស</p>
+                                            <p class="text-xl font-extrabold text-red-600">
+                                                ${{ number_format($product->price, 2) }}
+                                            </p>
+                                        </div>
+
+                                        <div class="flex items-center gap-2">
+                                            <a href="{{ route('shop.show', $product) }}"
+                                               class="w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center text-xs transition"
+                                               title="មើលលម្អិត">
+                                                <i class="fa-solid fa-eye"></i>
+                                            </a>
+
+                                            @if($product->stock > 0)
+                                                <button type="button"
+                                                        @click="addToCart({{ $product->id }}, 1)"
+                                                        class="px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-sm hover:shadow active:scale-95 cursor-pointer">
+                                                    <i class="fa-solid fa-cart-plus"></i>
+                                                    <span class="hidden sm:inline">ដាក់កន្ត្រក</span>
+                                                </button>
+                                            @else
+                                                <button disabled class="px-3 py-2 bg-slate-100 text-slate-400 rounded-xl text-xs font-bold cursor-not-allowed">
+                                                    អស់ពីស្តុក
+                                                </button>
+                                            @endif
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                    <!-- Pagination -->
+                    <div class="pt-6">
+                        {{ $products->links() }}
+                    </div>
+                @else
+                    <!-- Empty State -->
+                    <div class="bg-white rounded-3xl border border-slate-200 p-12 text-center space-y-4 shadow-sm">
+                        <div class="w-16 h-16 rounded-2xl bg-blue-50 text-blue-500 mx-auto flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-box-open"></i>
+                        </div>
+                        <h4 class="text-lg font-bold text-slate-800">មិនមានទំនិញដែលត្រូវនឹងការស្វែងរកទេ</h4>
+                        <p class="text-xs text-slate-400 max-w-md mx-auto">
+                            សូមសាកល្បងផ្លាស់ប្តូរពាក្យគន្លឹះស្វែងរក ឬដកតម្រងប្រភេទ និងម៉ាកយីហោចេញដើម្បីមើលទំនិញផ្សេងទៀត។
+                        </p>
+                        <a href="{{ route('shop.index') }}" class="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 text-white rounded-xl text-xs font-bold hover:bg-blue-700 transition">
+                            <i class="fa-solid fa-rotate-left"></i> មើលទំនិញទាំងអស់ឡើងវិញ
+                        </a>
+                    </div>
+                @endif
+
+            </div>
+        </div>
     </div>
 
-
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const container = document.getElementById('slider-container');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-
-            let currentIndex = 0;
-            const totalSlides = container.children.length;
-            let slideInterval;
-
-            function updateSlider(index) {
-                container.style.transform = `translateX(-${index * 100}%)`;
+        function toggleBrandRadio(radio) {
+            if (radio.dataset.wasChecked === 'true') {
+                // Radio was already checked: clicking it again unchecks it!
+                radio.checked = false;
+                radio.dataset.wasChecked = 'false';
+                radio.value = '';
+                radio.form.submit();
+            } else {
+                radio.form.submit();
             }
-
-            function nextSlide() {
-                currentIndex = (currentIndex + 1) % totalSlides;
-                updateSlider(currentIndex);
-            }
-
-            function prevSlide() {
-                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-                updateSlider(currentIndex);
-            }
-
-            nextBtn.addEventListener('click', () => {
-                nextSlide();
-                resetAutoPlay();
-            });
-
-            prevBtn.addEventListener('click', () => {
-                prevSlide();
-                resetAutoPlay();
-            });
-
-            function startAutoPlay() {
-                slideInterval = setInterval(nextSlide, 5000); // លោតរៀងរាល់ ៥វិនាទី
-            }
-
-            function resetAutoPlay() {
-                clearInterval(slideInterval);
-                startAutoPlay();
-            }
-
-            startAutoPlay();
-        });
-
-
-    
-    window.addEventListener('scroll', () => {
-        const header = document.querySelector('header');
-        if (window.scrollY > 20) {
-                    header.classList.add('py-1', 'shadow-md');
-        } else {
-                    header.classList.remove('py-1', 'shadow-md');
         }
-    });
-        
     </script>
-@include('layouts.footer')
-</body>
-
-</html>
+</x-storefront-layout>

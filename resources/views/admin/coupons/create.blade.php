@@ -1,0 +1,90 @@
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-bold text-2xl text-slate-800 leading-tight flex items-center gap-2">
+            <i class="fa-solid fa-plus text-blue-600"></i>
+            {{ __('បង្កើតគូប៉ុងថ្មី (Create Coupon)') }}
+        </h2>
+    </x-slot>
+
+    <div class="py-12 bg-slate-50 min-h-screen font-['Kantumruy_Pro',sans-serif]">
+        <div class="max-w-2xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-slate-100">
+                <form action="{{ route('admin.coupons.store') }}" method="POST" class="space-y-6">
+                    @csrf
+
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-800">ព័ត៌មានគូប៉ុងបញ្ចុះតម្លៃ</h3>
+                        <p class="text-xs text-slate-400 mt-1">កំណត់កូដបញ្ចុះតម្លៃសម្រាប់អតិថិជនប្រើប្រាស់</p>
+                    </div>
+
+                    <!-- Code & Type -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">កូដគូប៉ុង (Coupon Code) *</label>
+                            <input type="text" name="code" value="{{ old('code') }}" placeholder="ឧ. SALE2026, DISCOUNT10" required
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm uppercase font-mono font-bold outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('code') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">ប្រភេទបញ្ចុះតម្លៃ *</label>
+                            <select name="type" required class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="percent" {{ old('type') === 'percent' ? 'selected' : '' }}>ភាគរយ (% Off)</option>
+                                <option value="fixed" {{ old('type') === 'fixed' ? 'selected' : '' }}>សាច់ប្រាក់ថេរ ($ Off)</option>
+                            </select>
+                            @error('type') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <!-- Value & Min Order -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">តម្លៃបញ្ចុះ (Value) *</label>
+                            <input type="number" step="0.01" name="value" value="{{ old('value') }}" placeholder="ឧ. 10 សម្រាប់ 10% ឬ $10" required
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('value') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">ទិញអប្បបរមា ($ Min Order)</label>
+                            <input type="number" step="0.01" name="min_order_amount" value="{{ old('min_order_amount', 0) }}" placeholder="0.00"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                            @error('min_order_amount') <p class="text-xs text-rose-500 mt-1">{{ $message }}</p> @enderror
+                        </div>
+                    </div>
+
+                    <!-- Max Discount & Usage Limit -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">បញ្ចុះអតិបរមា ($ Max Discount)</label>
+                            <input type="number" step="0.01" name="max_discount_amount" value="{{ old('max_discount_amount') }}" placeholder="ទុកទទេបើគ្មានកំណត់"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-semibold text-slate-700 mb-1.5">កំណត់ចំនួនដងប្រើ (Usage Limit)</label>
+                            <input type="number" name="usage_limit" value="{{ old('usage_limit') }}" placeholder="ទុកទទេបើមិនកំណត់"
+                                   class="w-full px-4 py-2.5 rounded-xl border border-slate-200 text-sm outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                    </div>
+
+                    <!-- Active Toggle -->
+                    <div class="flex items-center gap-2">
+                        <input type="checkbox" name="is_active" id="is_active" value="1" checked class="w-4 h-4 rounded text-blue-600 border-slate-300">
+                        <label for="is_active" class="text-sm font-medium text-slate-700">ដាក់ឱ្យប្រើប្រាស់ភ្លាមៗ (Active)</label>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+                        <a href="{{ route('admin.coupons.index') }}" class="px-4 py-2 text-sm text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition font-medium">
+                            បោះបង់
+                        </a>
+                        <button type="submit" class="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-semibold transition cursor-pointer shadow-sm">
+                            <i class="fa-solid fa-check me-1"></i> រក្សាទុក
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

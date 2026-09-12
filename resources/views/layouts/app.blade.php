@@ -50,15 +50,15 @@
                     <div class="space-y-1">
                         <!-- Dashboard -->
                         <a href="{{ route('admin.dashboard') }}"
-                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-slate-800 text-white' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 {{ request()->routeIs('admin.dashboard') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                             <i class="fa-solid fa-chart-pie w-5 text-center transition-transform group-hover:scale-110"></i>
                             <span>ទិដ្ឋភាពទូទៅ (Dashboard)</span>
                         </a>
         
                         <!-- POS -->
-                        <a href="#"
-                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors duration-200">
-                            <i class="fa-solid fa-cash-register w-5 text-center transition-transform group-hover:scale-110"></i>
+                        <a href="{{ route('admin.pos.index') }}"
+                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 {{ request()->routeIs('admin.pos.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
+                            <i class="fa-solid fa-cash-register w-5 text-center transition-transform group-hover:scale-110 text-amber-400"></i>
                             <span>លក់រាយ & POS</span>
                         </a>
                     </div>
@@ -70,19 +70,23 @@
                     <div class="space-y-1">
         
                         <!-- Orders -->
-                        <a href="#"
-                            class="group flex items-center justify-between px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors duration-200">
+                        @php
+                            $pendingBadgeCount = \App\Models\Order::whereIn('status', ['pending', 'processing'])->count();
+                        @endphp
+                        <a href="{{ route('admin.orders.index') }}"
+                            class="group flex items-center justify-between px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 {{ request()->routeIs('admin.orders.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                             <div class="flex items-center space-x-3">
                                 <i
                                     class="fa-solid fa-bag-shopping w-5 text-center transition-transform group-hover:scale-110"></i>
                                 <span>ការបញ្ជាទិញ (Orders)</span>
                             </div>
-                            <!-- Badge សម្គាល់មាន Order ថ្មី -->
-                            <span class="bg-amber-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-full">5</span>
+                            @if($pendingBadgeCount > 0)
+                                <span class="bg-amber-500 text-black text-[10px] font-bold px-2 py-0.5 rounded-full">{{ $pendingBadgeCount }}</span>
+                            @endif
                         </a>
         
                         <!-- Products (Dropdown Menu with Alpine.js) -->
-                        <div x-data="{ open: {{ request()->routeIs('products.*', 'categories.*') ? 'true' : 'false' }} }">
+                        <div x-data="{ open: {{ request()->routeIs('products.*', 'categories.*', 'brands.*') ? 'true' : 'false' }} }">
                             <button @click="open = !open"
                                 class="w-full flex items-center justify-between px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors duration-200 focus:outline-none">
                                 <div class="flex items-center space-x-3">
@@ -94,20 +98,20 @@
                             </button>
                             <!-- Sub-menu Items -->
                             <div x-show="open" style="display: none;" class="pl-11 pr-3 py-1 space-y-1 mt-1 border-l-2 border-slate-800 ml-4">
-                                <!-- ទី១៖ ភ្ជាប់ទៅកាន់ ProductController -->
+                                <!-- ទី១៖ បញ្ជីទំនិញ -->
                                 <a href="{{ route('products.index') }}"
                                     class="block px-3 py-2 text-[13px] rounded-lg transition-colors {{ request()->routeIs('products.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
                                     បញ្ជីទំនិញ
                                 </a>
                                 
-                                <!-- ទី២៖ ភ្ជាប់ទៅកាន់ CategoryController -->
+                                <!-- ទី២៖ ប្រភេទ (Categories) -->
                                 <a href="{{ route('categories.index') }}"
                                     class="block px-3 py-2 text-[13px] rounded-lg transition-colors {{ request()->routeIs('categories.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
                                     ប្រភេទ (Categories)
                                 </a>
                                 
-                                <!-- ទី៣៖ ភ្ជាប់ទៅកាន់ BrandController (ឬ # បើមិនទាន់មាន Route) -->
-                                <a href="{{ Route::has('brands.index') ? route('brands.index') : '#' }}"
+                                <!-- ទី៣៖ ម៉ាក (Brands) -->
+                                <a href="{{ route('brands.index') }}"
                                     class="block px-3 py-2 text-[13px] rounded-lg transition-colors {{ request()->routeIs('brands.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:text-white hover:bg-slate-800' }}">
                                     ម៉ាក (Brands)
                                 </a>
@@ -115,15 +119,15 @@
                         </div>
         
                         <!-- Customers -->
-                        <a href="#"
-                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors duration-200">
+                        <a href="{{ route('admin.customers.index') }}"
+                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 {{ request()->routeIs('admin.customers.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                             <i class="fa-solid fa-users w-5 text-center transition-transform group-hover:scale-110"></i>
                             <span>អតិថិជន (Customers)</span>
                         </a>
         
                         <!-- Promotions / Coupons -->
-                        <a href="#"
-                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors duration-200">
+                        <a href="{{ route('admin.coupons.index') }}"
+                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 {{ request()->routeIs('admin.coupons.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                             <i class="fa-solid fa-ticket w-5 text-center transition-transform group-hover:scale-110"></i>
                             <span>ប្រូម៉ូសិន & គូប៉ុង</span>
                         </a>
@@ -135,8 +139,8 @@
                     <p class="text-[10px] uppercase text-slate-500 px-3 pb-2 font-bold tracking-wider">ប្រព័ន្ធ (SYSTEM)</p>
                     <div class="space-y-1">
                         <!-- Analytics / Reports -->
-                        <a href="#"
-                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors duration-200">
+                        <a href="{{ route('admin.reports.index') }}"
+                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 {{ request()->routeIs('admin.reports.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                             <i
                                 class="fa-solid fa-file-invoice-dollar w-5 text-center transition-transform group-hover:scale-110"></i>
                             <span>របាយការណ៍ (Reports)</span>
@@ -150,8 +154,8 @@
                         </a>
         
                         <!-- Settings -->
-                        <a href="#"
-                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium text-slate-400 hover:bg-slate-800 hover:text-white transition-colors duration-200">
+                        <a href="{{ route('admin.settings.index') }}"
+                            class="group flex items-center space-x-3 px-3 py-2.5 rounded-lg font-medium transition-colors duration-200 {{ request()->routeIs('admin.settings.*') ? 'bg-slate-800 text-white font-bold' : 'text-slate-400 hover:bg-slate-800 hover:text-white' }}">
                             <i class="fa-solid fa-gear w-5 text-center transition-transform group-hover:scale-110"></i>
                             <span>ការកំណត់ (Settings)</span>
                         </a>

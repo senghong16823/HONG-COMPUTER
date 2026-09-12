@@ -30,12 +30,12 @@ class AuthenticatedSessionController extends Controller
 
         // return redirect()->intended(route('dashboard', absolute: false));
 
-    if ($request->user()->role === 'admin') {
-        return redirect()->intended('/admin/dashboard'); 
-    }
+        if ($request->user()->role === 'admin') {
+            return redirect()->intended('/admin/dashboard');
+        }
 
-    // ប្រសិនបើជា User ធម្មតា (is_admin == 0) ឲ្យទៅកាន់ Dashboard ដើម
-    return redirect()->intended(route('dashboard', absolute: false));
+        // ប្រសិនបើជា User ធម្មតា (is_admin == 0) ឲ្យទៅកាន់ Dashboard ដើម
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

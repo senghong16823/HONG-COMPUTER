@@ -32,6 +32,18 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="mb-4">
+                                <label class="block text-gray-700 mb-2">ម៉ាកផលិតផល (Brand)</label>
+                                <select name="brand_id"
+                                    class="w-full border-gray-300 rounded shadow-sm focus:ring-blue-500">
+                                    <option value="">-- គ្មានម៉ាក (No Brand) --</option>
+                                    @foreach($brands as $brand)
+                                        <option value="{{ $brand->id }}" {{ old('brand_id', $product->brand_id) == $brand->id ? 'selected' : '' }}>
+                                            {{ $brand->name }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
 
                             <div class="mb-4">
                                 <label class="block text-gray-700 mb-2">តម្លៃ (ដុល្លារ) *</label>

@@ -78,11 +78,18 @@
                                         @endif
                                     </td>
 
-                                    {{-- category --}}
+                                    {{-- category & brand --}}
                                     <td class="p-4">
-                                        <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
-                                            {{ $product->category->name ?? 'មិនមាន' }}
-                                        </span>
+                                        <div class="flex flex-col gap-1 items-start">
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100">
+                                                {{ $product->category->name ?? 'មិនមាន' }}
+                                            </span>
+                                            @if($product->brand)
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-purple-50 text-purple-700 border border-purple-100">
+                                                    <i class="fa-solid fa-tag text-[9px] mr-1"></i> {{ $product->brand->name }}
+                                                </span>
+                                            @endif
+                                        </div>
                                     </td>
 
                                     {{-- price --}}

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Product; // ហៅ Product Model មកប្រើ
-use App\Models\Category; // ហៅ Category Model មកប្រើ
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -14,7 +15,8 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('category')->latest()->get();
+        $products = Product::with(['category', 'brand'])->latest()->get();
+
         return view('admin.products.index', compact('products'));
     }
 
@@ -24,7 +26,9 @@ class ProductController extends Controller
     public function create()
     {
         $categories = Category::all();
-        return view('admin.products.create', compact('categories'));
+        $brands = Brand::where('is_active', true)->orderBy('name')->get();
+
+        return view('admin.products.create', compact('categories', 'brands'));
     }
 
     /**
@@ -35,6 +39,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
@@ -42,13 +47,14 @@ class ProductController extends Controller
         $imagePath = null;
         if ($request->hasFile('image')) {
             $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('uploads/products'), $imageName);
-            $imagePath = 'uploads/products/' . $imageName;
+            $imagePath = 'uploads/products/'.$imageName;
         }
 
         Product::create([
             'category_id' => $request->category_id,
+            'brand_id' => $request->brand_id,
             'name' => $request->name,
             'price' => $request->price,
             'stock' => $request->stock ?? 0,
@@ -74,13 +80,15 @@ class ProductController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-   /**
+    /**
      * បង្ហាញ Form សម្រាប់កែប្រែព័ត៌មានកុំព្យូទ័រ
      */
     public function edit(Product $product)
     {
         $categories = Category::all();
-        return view('admin.products.edit', compact('product', 'categories'));
+        $brands = Brand::where('is_active', true)->orderBy('name')->get();
+
+        return view('admin.products.edit', compact('product', 'categories', 'brands'));
     }
 
     /**
@@ -91,6 +99,7 @@ class ProductController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'brand_id' => 'nullable|exists:brands,id',
             'price' => 'required|numeric',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,webp|max:2048',
         ]);
@@ -104,13 +113,14 @@ class ProductController extends Controller
             }
 
             $image = $request->file('image');
-            $imageName = time() . '.' . $image->getClientOriginalExtension();
+            $imageName = time().'.'.$image->getClientOriginalExtension();
             $image->move(public_path('uploads/products'), $imageName);
-            $imagePath = 'uploads/products/' . $imageName;
+            $imagePath = 'uploads/products/'.$imageName;
         }
 
         $product->update([
             'category_id' => $request->category_id,
+            'brand_id' => $request->brand_id,
             'name' => $request->name,
             'price' => $request->price,
             'stock' => $request->stock ?? 0,

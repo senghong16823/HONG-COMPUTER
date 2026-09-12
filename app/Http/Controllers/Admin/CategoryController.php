@@ -12,6 +12,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = Category::latest()->get();
+
         return view('admin.categories.index', compact('categories'));
     }
 
@@ -67,6 +68,7 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         $category->delete();
+
         return redirect()->route('categories.index')->with('success', 'លុបប្រភេទទំនិញជោគជ័យ!');
     }
 }

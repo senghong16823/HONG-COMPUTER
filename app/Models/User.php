@@ -38,4 +38,12 @@ class User extends Authenticatable
     {
         return $this->is_admin ? 'admin' : 'user';
     }
+
+    /**
+     * Get the orders for the user.
+     */
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

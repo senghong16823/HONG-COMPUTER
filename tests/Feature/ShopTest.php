@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\Category;
+use App\Models\Coupon;
 use App\Models\Product;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -124,5 +125,30 @@ class ShopTest extends TestCase
             'rating' => 5,
             'comment' => 'Exceptional noise cancellation!',
         ]);
+    }
+
+    public function test_shop_page_displays_active_coupons(): void
+    {
+        Coupon::create([
+            'code' => 'ACTIVEPROMO',
+            'type' => 'percent',
+            'value' => 10,
+            'end_date' => now()->addDays(5)->toDateString(),
+            'is_active' => true,
+        ]);
+
+        Coupon::create([
+            'code' => 'EXPIREDPROMO',
+            'type' => 'fixed',
+            'value' => 20,
+            'end_date' => now()->subDays(5)->toDateString(),
+            'is_active' => true,
+        ]);
+
+        $response = $this->get('/');
+
+        $response->assertOk();
+        $response->assertSee('ACTIVEPROMO');
+        $response->assertDontSee('EXPIREDPROMO');
     }
 }

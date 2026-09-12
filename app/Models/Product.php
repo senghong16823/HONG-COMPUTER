@@ -7,14 +7,19 @@ use Illuminate\Database\Eloquent\Model;
 class Product extends Model
 {
     protected $fillable = [
-        'category_id', 'name', 'price', 'stock', 
-        'cpu', 'ram', 'storage', 'image', 'description'
+        'category_id', 'brand_id', 'name', 'price', 'stock',
+        'cpu', 'ram', 'storage', 'image', 'description',
     ];
 
     // ទំនាក់ទំនង៖ កុំព្យូទ័រមួយ គឺស្ថិតនៅក្នុងប្រភេទ (Category) មួយ
-    public function category() 
+    public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
     }
 
     public function reviews()
